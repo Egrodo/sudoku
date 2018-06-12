@@ -1,0 +1,24 @@
+div.GameContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: ". . ." ". . ." ". . .";
+
+  margin: auto;
+  height: 25em;
+  width: 25em;
+  border: 1px solid white;
+  
+  background-color: #2a013a;
+}
+
+div.block {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: ". . ." ". . ." ". . .";
+
+  margin: 0;
+  padding: 0;
+  border: 1px solid white;
+}

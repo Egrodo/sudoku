@@ -1,0 +1,13 @@
+div.SubBlock {
+  border: 1px dashed lightslategray;
+}
+
+div.SubBlock form input {
+  width: 2em;
+  height: 2em;
+  background-color: inherit;
+  border: none;
+  color: white;
+  text-align: center;
+  margin-top: .2em;
+}

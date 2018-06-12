@@ -1,15 +1,12 @@
-import React, { Component } from 'react';
-import 'normalize.css';
+import React from 'react';
+import GameContainer from './components/GameContainer';
 import './css/App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        Sudoku
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div className="App">
+    <h1>SUDOKU</h1>
+    <GameContainer />
+  </div>
+);
 
 export default App;
