@@ -13,6 +13,11 @@ class SubBlock extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  componentWillMount() {
+    console.log(this.props);
+    this.setState({ val: this.props.value });
+  }
+
   onChange(e) {
     if (e.target.value.length > 1) return;
     this.setState({ val: e.target.value });
@@ -39,10 +44,12 @@ class SubBlock extends Component {
 
 SubBlock.propTypes = {
   name: PropTypes.string,
+  value: PropTypes.number,
 };
 
 SubBlock.defaultProps = {
   name: 'Unspecified',
+  value: 0,
 };
 
 export default SubBlock;
