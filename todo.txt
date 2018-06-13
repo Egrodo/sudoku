@@ -1,0 +1,3 @@
+- Implement React Context for the update function
+- Use localStorage to save data while user is playing
+- Convert into PWA

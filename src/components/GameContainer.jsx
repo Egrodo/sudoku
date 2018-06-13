@@ -28,10 +28,34 @@ class GameContainer extends Component {
     this.update = this.update.bind(this);
   }
 
-  componentWillMount() {
-    // Generate dummy data in correct format to pass down.
-    const data = [];
-    for (let i = 1; i <= 9; ++i) data.push([...Array(9).keys()]);
+  componentDidMount() {
+    const genRow = () => {
+      const row = [];
+      while (row.length !== 9) {
+        let rand = Math.floor(Math.random() * Math.floor(9));
+        rand++;
+        if (!row.includes(rand)) row.push(rand);
+      }
+      return row;
+    };
+
+    const data = [genRow()];
+
+    while (data.length !== 9) { // Loop through all 9 rows
+      const randRow = genRow();
+      let flag = false;
+      // For each upper row, check if there are conflicts.
+      for (let i = data.length - 1; i >= 0; --i) { // Loop up to check
+        if (flag) break;
+        for (let n = 0; n < randRow.length; ++n) {
+          if (flag) break;
+          if (randRow[n] === data[i][n]) flag = true;
+        }
+      }
+      if (!flag) data.push(randRow);
+    }
+
+    console.log(data);
     this.setState({ data });
   }
 
