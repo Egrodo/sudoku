@@ -11,6 +11,8 @@ class Block extends Component {
       },
     };
   }
+
+  // Each block is made up out of 9 SubBlocks.
   render() {
     return (
       <div className={`block ${this.props.name}`}>
