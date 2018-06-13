@@ -12,24 +12,21 @@ class Block extends Component {
     this.setState({ val: this.props.val });
   }
 
-  async onChange(e) {
-    // Keep val a string until updating globally.
-    let val = e.target.value;
-
+  onChange(e) {
+    const val = e.target.value;
+ 
     // Ensure the input field contains only a single number.
     if (val.length > 1) return;
     if (val !== '' && Number.isNaN(parseInt(val, 10))) return;
-    await this.setState({ val });
-    this.props.update(this.props.name, parseInt(this.state.val, 10));
+    this.setState({ val });
+    this.props.update(this.props.name, parseInt(val, 10));
   }
 
-  onSubmit(e) {
+  onSubmit(e) { /* eslint-disable-line */
     e.preventDefault();
   }
 
-  // Each block is made up out of 9 SubBlocks.
   render() {
-    // TODO: Switch to type: number.
     return (
       <div className="Block" id={this.props.name}>
         <form onSubmit={this.onSubmit}>

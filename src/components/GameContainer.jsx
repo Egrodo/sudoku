@@ -8,7 +8,10 @@ class GameContainer extends Component {
     this.state = {
       data: [],
     };
+
     /*
+      GameContainer renders 9 rows, each of which
+      contain 9 individual blocks to make 9 rows.
       [
         [
           1, 4, 8, 0, 2, 5, 3, 9, 7, 6
@@ -33,19 +36,21 @@ class GameContainer extends Component {
   }
 
   update(id, val) {
-    const [row, col] = id.split('-');
-    // Now we have a row and column, modify state.
+    // Function to update the game state from any individual block.
+
+    const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
     this.setState({ data });
   }
 
   render() {
-    // TODO: Fix update func prop drilling with context api.
+    // TODO: Fix update function prop drilling with context api.
+
     return (
       <div className="GameContainer">
         {this.state.data.map((row, i) => (
-          <Row data={row} name={i.toString()} update={this.update} />
+          <Row data={row} name={i.toString()} key={i} update={this.update} />
         ))}
       </div>
     );

@@ -21,6 +21,7 @@ class Row extends Component {
           <Block
             val={val}
             name={`${this.props.name}-${i}`}
+            key={`${this.props.name}-${i}`}
             update={this.props.update}
           />
         ))}
@@ -38,7 +39,7 @@ Row.propTypes = {
 Row.defaultProps = {
   data: [],
   name: null,
-  update: (() => console.error('no update func passed.')),
+  update: (() => console.error('No update function.')),
 };
 
 export default Row;
