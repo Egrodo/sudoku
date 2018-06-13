@@ -2,6 +2,7 @@
     "extends": "airbnb",
     "rules": {
         "linebreak-style": 0,
-        "react/no-unused-state": 0
+        "react/no-unused-state": 0,
+        "no-plusplus": 0
     }
 }

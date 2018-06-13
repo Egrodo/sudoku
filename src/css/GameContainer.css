@@ -1,8 +1,7 @@
 div.GameContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-areas: ". . ." ". . ." ". . .";
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(9, 1fr);
 
   margin: auto;
   height: 25em;
@@ -12,13 +11,30 @@ div.GameContainer {
   background-color: #2a013a;
 }
 
-div.block {
+div.Row {
+  /* Row of 9 blocks */
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-areas: ". . ." ". . ." ". . .";
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: 1fr;
 
   margin: 0;
   padding: 0;
-  border: 1px solid white;
+}
+
+div.Row:nth-of-type(3), div.Row:nth-of-type(6){
+  border-bottom: 2px solid white;
+}
+
+div.Block:nth-of-type(4), div.Block:nth-of-type(7) {
+  border-left: 2px solid white;
+}
+
+div.Block form input {
+  width: 2em;
+  height: 2em;
+  background-color: inherit;
+  border: none;
+  color: white;
+  text-align: center;
+  margin-top: .2em;
 }

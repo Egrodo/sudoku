@@ -1,35 +1,57 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import SubBlock from './SubBlock';
 
 class Block extends Component {
   constructor() {
     super();
     this.state = {
-      blocks: {
-        A1: 1, B1: 2, C1: 3, A2: 4, B2: 5, C2: 6, A3: 7, B3: 8, C3: 9,
-      },
+
     };
+    this.onChange = this.onChange.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState({ val: this.props.val });
+  }
+
+  async onChange(e) {
+    if (e.target.value.length > 1) return;
+    await this.setState({ val: e.target.value });
+    this.props.update(this.props.name, this.state.val);
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
   }
 
   // Each block is made up out of 9 SubBlocks.
   render() {
     return (
-      <div className={`block ${this.props.name}`}>
-        { Object.keys(this.state.blocks).map(name => (
-          <SubBlock key={name} name={name} value={this.state.blocks[name]} />
-        ))}
+      <div className="Block" id={this.props.name}>
+        <form onSubmit={this.onSubmit}>
+          <input
+            value={this.state.val}
+            onChange={this.onChange}
+            type="text"
+            disabled={this.state.disabled}
+            maxLength="1"
+          />
+        </form>
       </div>
     );
   }
 }
 
 Block.propTypes = {
+  val: PropTypes.number,
   name: PropTypes.string,
+  update: PropTypes.func,
 };
 
 Block.defaultProps = {
-  name: 'Unspecified',
+  val: 0,
+  name: 'NONE',
+  update: (() => console.error('no update func passed.')),
 };
 
 export default Block;
