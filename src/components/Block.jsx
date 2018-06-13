@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 class Block extends Component {
   constructor() {
     super();
-    this.state = {
-
-    };
+    this.state = { val: '' };
     this.onChange = this.onChange.bind(this);
   }
 
@@ -15,9 +13,14 @@ class Block extends Component {
   }
 
   async onChange(e) {
-    if (e.target.value.length > 1) return;
-    await this.setState({ val: e.target.value });
-    this.props.update(this.props.name, this.state.val);
+    // Keep val a string until updating globally.
+    let val = e.target.value;
+
+    // Ensure the input field contains only a single number.
+    if (val.length > 1) return;
+    if (val !== '' && Number.isNaN(parseInt(val, 10))) return;
+    await this.setState({ val });
+    this.props.update(this.props.name, parseInt(this.state.val, 10));
   }
 
   onSubmit(e) {
@@ -26,6 +29,7 @@ class Block extends Component {
 
   // Each block is made up out of 9 SubBlocks.
   render() {
+    // TODO: Switch to type: number.
     return (
       <div className="Block" id={this.props.name}>
         <form onSubmit={this.onSubmit}>

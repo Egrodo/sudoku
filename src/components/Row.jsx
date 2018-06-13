@@ -31,7 +31,7 @@ class Row extends Component {
 
 Row.propTypes = {
   data: PropTypes.arrayOf(PropTypes.number),
-  name: PropTypes.number,
+  name: PropTypes.string,
   update: PropTypes.func,
 };
 

@@ -44,7 +44,9 @@ class GameContainer extends Component {
     // TODO: Fix update func prop drilling with context api.
     return (
       <div className="GameContainer">
-        {this.state.data.map((row, i) => <Row data={row} name={i} update={this.update}/>)}
+        {this.state.data.map((row, i) => (
+          <Row data={row} name={i.toString()} update={this.update} />
+        ))}
       </div>
     );
   }
