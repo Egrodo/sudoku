@@ -18,22 +18,22 @@ class Block extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // TODO: only add change if solved.
     if (nextProps.val !== this.state.val) {
       this.setState({ val: nextProps.val });
-      console.log(nextProps.solved);
-      if (!nextProps.solved) this.setState({ change: true });
+      if (nextProps.solved) {
+        this.setState({ change: true });
+      } else this.setState({ change: false });
     }
   }
 
   onChange(e) {
     let val = e.target.value;
-    // Ensure the input field contains only a single number.
+    // Handle input parsing. Convert to ints, blanks handled as zeros in code.
     if (val.length > 1) return;
     if (val === '' || val === ' ') val = 0;
     val = parseInt(val, 10);
     if (Number.isNaN(val)) return;
-    this.props.update(this.props.name, parseInt(val, 10));
+    this.props.update(this.props.name, val);
   }
 
   onSubmit(e) {
@@ -73,7 +73,7 @@ Block.propTypes = {
 Block.defaultProps = {
   val: 0,
   name: 'NONE',
-  update: (() => console.error('no update func passed.')),
+  update: (() => { throw new Error('No update func passed to block'); }),
   solved: false,
 };
 

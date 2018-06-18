@@ -8,11 +8,13 @@ class GameContainer extends Component {
     super();
     this.state = {
       data: [],
-      solved: false,
+      modified: false,
       message: '',
     };
 
+    this.validate = this.validate.bind(this);
     this.update = this.update.bind(this);
+    this.reset = this.reset.bind(this);
     this.solve = this.solve.bind(this);
   }
 
@@ -22,8 +24,10 @@ class GameContainer extends Component {
 
   solve() {
     // Check if already solved before modifing.
-    // TODO: If modified, disabvle solved.
-    if (this.state.solved) return;
+    if (this.state.solved) {
+      this.setState({ message: 'Already solved.' });
+      return;
+    }
     const solved = sudoku.solve(this.state.data);
     if (!Array.isArray(solved)) {
       // If failed to solve.
@@ -31,16 +35,30 @@ class GameContainer extends Component {
     } else this.setState({ data: solved, solved: true, message: '' });
   }
 
+  reset() {
+    const data = sudoku.generate();
+    this.setState({ data, solved: false, message: '' });
+  }
+
+  validate() {
+    if (!sudoku.isFull(this.state.data)) {
+      this.setState({ message: 'Missing spots' });
+      return;
+    }
+    // TODO: Validate the board...
+    this.setState({ message: 'Validate not finished yet...' });
+  }
+
   update(id, val) {
     // Function to update the game state from any individual block.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
-    this.setState({ data, solved: false });
+    this.setState({ data, modified: true, solved: false });
   }
 
   render() {
-    // TODO: Fix update function prop drilling with context api.
+    // TODO: Fix prop drilling with context api.
     return (
       <Fragment>
 
@@ -56,9 +74,15 @@ class GameContainer extends Component {
           ))}
         </div>
 
-        <div className="control">
+        <div className="ui">
+          <button onClick={this.reset}>
+            Reset
+          </button>
           <button onClick={this.solve}>
             Solve
+          </button>
+          <button onClick={this.validate}>
+            Validate
           </button>
           <h4 className="message">
             {this.state.message ? this.state.message : ''}

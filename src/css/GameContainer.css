@@ -44,11 +44,15 @@ div.Block form input {
   margin-top: .2em;
 }
 
-div.control {
+div.ui {
   margin: 1em 0 2em 0;
 }
 
-h4.message {
+div.ui button {
+  margin: 0 .5em 0 .5em;
+}
+
+div.ui h4.message {
   color: red;
 }
 

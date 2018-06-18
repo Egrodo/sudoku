@@ -14,6 +14,9 @@ class Row extends Component {
     this.setState({ nums: this.props.data });
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ nums: nextProps.data });
+  }
   render() {
     return (
       <div className="Row" id={this.props.name}>
@@ -41,7 +44,7 @@ Row.propTypes = {
 Row.defaultProps = {
   data: [],
   name: null,
-  update: (() => console.error('No update function.')),
+  update: (() => { throw new Error('No update function.'); }),
   solved: false,
 };
 

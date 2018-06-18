@@ -94,6 +94,7 @@ const solve = (board) => {
 };
 
 module.exports = {
+  isFull,
   generate,
   solve,
 };
