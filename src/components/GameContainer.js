@@ -9,6 +9,7 @@ class GameContainer extends Component {
     this.state = {
       data: [],
       solved: false,
+      message: '',
     };
 
     this.update = this.update.bind(this);
@@ -23,7 +24,11 @@ class GameContainer extends Component {
     // Check if already solved before modifing.
     // TODO: If modified, disabvle solved.
     if (this.state.solved) return;
-    this.setState({ data: sudoku.solve(this.state.data), solved: true });
+    const solved = sudoku.solve(this.state.data);
+    if (!Array.isArray(solved)) {
+      // If failed to solve.
+      this.setState({ message: 'Cannot solve' });
+    } else this.setState({ data: solved, solved: true, message: '' });
   }
 
   update(id, val) {
@@ -41,7 +46,13 @@ class GameContainer extends Component {
 
         <div className="GameContainer">
           {this.state.data.map((row, i) => (
-            <Row data={row} name={i.toString()} key={i} update={this.update} />
+            <Row
+              data={row}
+              name={i.toString()}
+              key={i}
+              update={this.update}
+              solved={this.state.solved}
+            />
           ))}
         </div>
 
@@ -49,6 +60,9 @@ class GameContainer extends Component {
           <button onClick={this.solve}>
             Solve
           </button>
+          <h4 className="message">
+            {this.state.message ? this.state.message : ''}
+          </h4>
         </div>
       </Fragment>
     );

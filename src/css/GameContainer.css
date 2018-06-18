@@ -6,7 +6,7 @@ div.GameContainer {
   margin: auto;
   height: 25em;
   width: 25em;
-  border: 1px solid white;
+  border: 2px solid white;
   
   background-color: #2a013a;
 }
@@ -16,17 +16,22 @@ div.Row {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: 1fr;
-
   margin: 0;
   padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.65);
 }
 
 div.Row:nth-of-type(3), div.Row:nth-of-type(6){
   border-bottom: 2px solid white;
 }
 
-div.Block:nth-of-type(4), div.Block:nth-of-type(7) {
-  border-left: 2px solid white;
+div.Block:nth-of-type(3), div.Block:nth-of-type(6) {
+  border-right: 2px solid white;
+}
+
+div.Block {
+  border-left: 1px solid rgba(255, 255, 255, 0.65);
+  border-right: 1px solid rgba(255, 255, 255, 0.65);
 }
 
 div.Block form input {
@@ -40,7 +45,11 @@ div.Block form input {
 }
 
 div.control {
-  margin-top: 2em;
+  margin: 1em 0 2em 0;
+}
+
+h4.message {
+  color: red;
 }
 
 div.Block.change {

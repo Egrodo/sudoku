@@ -23,6 +23,7 @@ class Row extends Component {
             name={`${this.props.name}-${i}`}
             key={`${this.props.name}-${i}`}
             update={this.props.update}
+            solved={this.props.solved}
           />
         ))}
       </div>
@@ -34,12 +35,14 @@ Row.propTypes = {
   data: PropTypes.arrayOf(PropTypes.number),
   name: PropTypes.string,
   update: PropTypes.func,
+  solved: PropTypes.bool,
 };
 
 Row.defaultProps = {
   data: [],
   name: null,
   update: (() => console.error('No update function.')),
+  solved: false,
 };
 
 export default Row;

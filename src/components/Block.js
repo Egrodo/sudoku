@@ -18,19 +18,21 @@ class Block extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // Update animation
+    // TODO: only add change if solved.
     if (nextProps.val !== this.state.val) {
-      this.setState({ val: nextProps.val, change: true });
+      this.setState({ val: nextProps.val });
+      console.log(nextProps.solved);
+      if (!nextProps.solved) this.setState({ change: true });
     }
   }
 
   onChange(e) {
-    const val = e.target.value;
-
+    let val = e.target.value;
     // Ensure the input field contains only a single number.
     if (val.length > 1) return;
-    if (val !== '' && Number.isNaN(parseInt(val, 10))) return;
-    this.setState({ val });
+    if (val === '' || val === ' ') val = 0;
+    val = parseInt(val, 10);
+    if (Number.isNaN(val)) return;
     this.props.update(this.props.name, parseInt(val, 10));
   }
 
@@ -43,15 +45,16 @@ class Block extends Component {
   }
 
   render() {
+    const { change, val, disabled } = this.state;
     return (
-      <div className={`Block ${this.state.change ? 'change' : ''}`} id={this.props.name}>
+      <div className={`Block ${change ? 'change' : ''}`} id={this.props.name}>
         <form onSubmit={this.onSubmit}>
           <input
-            value={this.state.val}
+            value={val === 0 ? '' : val}
             onChange={this.onChange}
             onClick={this.onClick}
             type="text"
-            disabled={this.state.disabled}
+            disabled={disabled}
             maxLength="1"
           />
         </form>
@@ -64,12 +67,14 @@ Block.propTypes = {
   val: PropTypes.number,
   name: PropTypes.string,
   update: PropTypes.func,
+  solved: PropTypes.bool,
 };
 
 Block.defaultProps = {
   val: 0,
   name: 'NONE',
   update: (() => console.error('no update func passed.')),
+  solved: false,
 };
 
 export default Block;
