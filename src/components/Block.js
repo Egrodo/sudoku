@@ -1,15 +1,27 @@
+/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class Block extends Component {
   constructor() {
     super();
-    this.state = { val: '' };
+    this.state = {
+      val: '',
+      change: false,
+    };
+
     this.onChange = this.onChange.bind(this);
   }
 
   componentWillMount() {
     this.setState({ val: this.props.val });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Update animation
+    if (nextProps.val !== this.state.val) {
+      this.setState({ val: nextProps.val, change: true });
+    }
   }
 
   onChange(e) {
@@ -22,7 +34,7 @@ class Block extends Component {
     this.props.update(this.props.name, parseInt(val, 10));
   }
 
-  onSubmit(e) { /* eslint-disable-line */
+  onSubmit(e) {
     e.preventDefault();
   }
 
@@ -32,7 +44,7 @@ class Block extends Component {
 
   render() {
     return (
-      <div className="Block" id={this.props.name}>
+      <div className={`Block ${this.state.change ? 'change' : ''}`} id={this.props.name}>
         <form onSubmit={this.onSubmit}>
           <input
             value={this.state.val}

@@ -38,3 +38,16 @@ div.Block form input {
   text-align: center;
   margin-top: .2em;
 }
+
+div.control {
+  margin-top: 2em;
+}
+
+div.Block.change {
+  animation: colorFade 2s;
+}
+
+@keyframes colorFade {
+  0% { background-color: rgba(255, 0, 0, 0.7) }
+  100% { background-color: rgba(255, 0, 0, 0) }
+}

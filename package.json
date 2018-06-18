@@ -1,5 +1,6 @@
 {
   "name": "sudoku",
+  "main": "index.jsx",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,7 +20,6 @@
     "eject": "react-scripts eject"
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).",
-  "main": "index.jsx",
   "devDependencies": {
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.12.0",
