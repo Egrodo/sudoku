@@ -76,7 +76,11 @@ class GameContainer extends Component {
 
   clear() {
     const clear = sudoku.clear(this.state.data);
-    this.setState({ message: 'Cleared', err: false });
+    this.setState({ 
+      message: 'Cleared', 
+      err: false,
+      solved: false
+    });
   }
 
   update(id, val) {
