@@ -16,8 +16,8 @@ class GameContainer extends Component {
     this.validate = this.validate.bind(this);
     this.update = this.update.bind(this);
     this.reset = this.reset.bind(this);
-    this.clear = this.clear.bind(this);
     this.solve = this.solve.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   componentWillMount() {
@@ -75,11 +75,12 @@ class GameContainer extends Component {
   }
 
   clear() {
-    const clear = sudoku.clear(this.state.data);
-    this.setState({ 
-      message: 'Cleared', 
+    const cleared = this.state.data.map((v => v.map(l => 0)));
+    this.setState({
+      data: cleared,
+      message: 'Cleared',
       err: false,
-      solved: false
+      solved: false,
     });
   }
 
@@ -116,11 +117,11 @@ class GameContainer extends Component {
         </div>
 
         <div className="ui">
-          <button onClick={this.reset}>
-            Reset
-          </button>
           <button onClick={this.clear}>
             Clear
+          </button>
+          <button onClick={this.reset}>
+            New Puzzle
           </button>
           <button onClick={this.solve}>
             Solve

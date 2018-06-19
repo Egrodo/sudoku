@@ -135,18 +135,9 @@ const solve = (board) => {
   }
 };
 
-const clear = (board) => {
-  for (let x = 0; x < 9; x++) { // Loop through rows
-    for (let y = 0; y < 9; y++) { // Loop through columns
-      board[x][y] = 0;
-    }
-  }
-}
-
 module.exports = {
   isFull,
   generate,
   validate,
   solve,
-  clear,
 };
