@@ -10,28 +10,40 @@ div.GameContainer {
 }
 
 div.ui {
-  margin: .7em;
+  display: grid;
+  width: 20em;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: "btn btn1" "btn2 btn3" "msg msg";
+  align-items: center;
+  margin: 1em auto;
 }
 
 div.ui button {
+  grid-area: btn;
   background-color: #2a013a;
   border: 2px solid #888888;
   color: white;
   cursor: pointer;
   padding: .5em;
   margin: .5em;
-  width: 8em;
   text-decoration: none;
   display: inline-block;
   font-size: 1em;
   transition-duration: .8s;
 }
 
+div.ui button:nth-of-type(2) { grid-area: btn1; }
+div.ui button:nth-of-type(3) { grid-area: btn2; }
+div.ui button:nth-of-type(4) { grid-area: btn3; }
+
+
 div.ui button:active {
   background-color: #4a0067;
 }
 
 h4.message {
+  grid-area: msg;
   color: green;
 }
 
@@ -39,46 +51,18 @@ h4.message.err {
   color: red;
 }
 
-@media only screen and (min-width: 400px) {
-  div.ui button {
-    width: 10em;
-  }
-}
-
-@media only screen and (min-width: 550px) {
-  div.ui button {
-    font-size: 1.1em;
-    width: 11em;
-  }
-}
-
 @media only screen and (min-width: 655px) {
   div.GameContainer {
     width: 65vw;
-  }
-  div.ui {
-    width: 70vw;
-    margin: 1em auto;
+    height: 65vw
   }
 }
 
 @media only screen and (min-width: 750px) {
   div.GameContainer {
-    width: 55vw;
-    height: 40vh;
+    width: 45vw;
+    height: 45vw;
     font-size: 1.2em;
-  }
-}
-
-@media only screen and (min-width: 1000px) {
-  div.GameContainer {
-    width: 65vw;
-    height: 65vw;
-    font-size: 2em;
-  }
-
-  div.ui {
-    width: 50vw;
   }
 }
 
@@ -86,10 +70,6 @@ h4.message.err {
   div.GameContainer {
     width: 45vw;
     height: 45vw;
-  }
-  
-  div.ui button {
-    width: 15em;
   }
 }
 
@@ -106,8 +86,5 @@ h4.message.err {
     height: 20em;
     width: 20em;
     font-size: 1.1em;
-  }
-  div.ui button {
-    width: 17em;
   }
 }
