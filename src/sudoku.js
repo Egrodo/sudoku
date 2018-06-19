@@ -20,6 +20,47 @@ const isFull = (board) => {
   return true;
 };
 
+const validate = (board) => {
+  // Accepts a full or unfinished board and returns
+  // either true (indicating valid) or an array of
+  // the offenders.
+
+  for (let i = 0; i < 9; ++i) { // Loop down the rows
+    for (let j = 0; j < 9; ++j) { // Loop across the columns
+      // Validate even if the board isn't full.
+      const curr = board[i][j];
+      if (curr === 0) continue;
+
+      // Loop across the row (columns)
+      for (let x = 0; x < 9; ++x) {
+        // Ensure we're not checking ourself
+        if (x === j) continue;
+        if (curr === board[i][x]) return [[i, j], [i, x]];
+      }
+
+      // Loop down the column (rows)
+      for (let y = 0; y < 9; ++y) {
+        if (y === i) continue;
+        if (curr === board[y][j]) return [[i, j], [y, j]];
+      }
+
+      // Check the block
+      // First, find midpoint of whatever block we're in.
+      const rowC = ((Math.floor(i / 3) + 1) * 3) - 2;
+      const colC = ((Math.floor(j / 3) + 1) * 3) - 2;
+
+      // Then check curr against its block neighbors.
+      for (let x = rowC - 1; x <= rowC + 1; ++x) {
+        for (let y = colC - 1; y <= colC + 1; ++y) {
+          if (y === j) continue;
+          if (board[x][y] === curr) return [[i, j], [x, y]];
+        }
+      }
+    }
+  }
+  return true;
+};
+
 // Generate array of possibilities for given point.
 const possibilities = (board, i, j) => {
   if (i > 8 || i < 0 || j > 8 || j < 0) throw new Error('Invalid coords.');
@@ -96,5 +137,6 @@ const solve = (board) => {
 module.exports = {
   isFull,
   generate,
+  validate,
   solve,
 };

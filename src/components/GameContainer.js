@@ -8,10 +8,10 @@ class GameContainer extends Component {
     super();
     this.state = {
       data: [],
-      modified: false,
+      solved: false,
       message: '',
     };
-
+    // Have flag for making message good or bad.
     this.validate = this.validate.bind(this);
     this.update = this.update.bind(this);
     this.reset = this.reset.bind(this);
@@ -23,11 +23,19 @@ class GameContainer extends Component {
   }
 
   solve() {
+    // Solve needs to validate that it's solvable before solving.
     // Check if already solved before modifing.
     if (this.state.solved) {
       this.setState({ message: 'Already solved.' });
       return;
     }
+    const valid = sudoku.validate(this.state.data);
+    if (valid !== true) {
+      // Flash red on the block and on conflicting block.
+      this.setState({ message: `Conflict with ${valid[0]} and ${valid[1]}.` });
+      return;
+    }
+
     const solved = sudoku.solve(this.state.data);
     if (!Array.isArray(solved)) {
       // If failed to solve.
@@ -43,10 +51,12 @@ class GameContainer extends Component {
   validate() {
     if (!sudoku.isFull(this.state.data)) {
       this.setState({ message: 'Missing spots' });
-      return;
+    } else {
+      const valid = sudoku.validate(this.state.data);
+      if (valid !== true) {
+        this.setState({ message: `Conflict with ${valid[0]} and ${valid[1]}.` });
+      } else this.setState({ message: 'Valid' });
     }
-    // TODO: Validate the board...
-    this.setState({ message: 'Validate not finished yet...' });
   }
 
   update(id, val) {
@@ -54,7 +64,7 @@ class GameContainer extends Component {
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
-    this.setState({ data, modified: true, solved: false });
+    this.setState({ data, modified: true, solved: false }, console.log(this.state.data));
   }
 
   render() {
