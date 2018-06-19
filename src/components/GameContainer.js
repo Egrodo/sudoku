@@ -10,8 +10,9 @@ class GameContainer extends Component {
       data: [],
       solved: false,
       message: '',
+      err: true,
     };
-    // Have flag for making message good or bad.
+
     this.validate = this.validate.bind(this);
     this.update = this.update.bind(this);
     this.reset = this.reset.bind(this);
@@ -23,55 +24,64 @@ class GameContainer extends Component {
   }
 
   solve() {
-    // Solve needs to validate that it's solvable before solving.
     // Check if already solved before modifing.
     if (this.state.solved) {
-      this.setState({ message: 'Already solved.' });
-      return;
-    }
-    const valid = sudoku.validate(this.state.data);
-    if (valid !== true) {
-      // Flash red on the block and on conflicting block.
-      this.setState({ message: `Conflict with ${valid[0]} and ${valid[1]}.` });
+      this.setState({ message: 'Already solved.', err: true });
       return;
     }
 
-    const solved = sudoku.solve(this.state.data);
-    if (!Array.isArray(solved)) {
-      // If failed to solve.
-      this.setState({ message: 'Cannot solve' });
-    } else this.setState({ data: solved, solved: true, message: '' });
+    // Validate existing data to ensure its solvable.
+    const valid = sudoku.validate(this.state.data);
+    if (valid !== true) {
+      this.setState({
+        message: `Conflict with ${valid[0]} and ${valid[1]}.`,
+        err: [valid[0], valid[1]],
+      });
+      // ^ Store err coords for visualizer.
+    } else {
+      const solved = sudoku.solve(this.state.data);
+      if (!Array.isArray(solved)) {
+        // Will this ever be hit? Validator should cover unsolvable puzzles.
+        this.setState({ message: 'Unsolvable', err: true });
+      } else {
+        this.setState({
+          data: solved,
+          solved: true,
+          message: '',
+        });
+      }
+    }
   }
 
   reset() {
     const data = sudoku.generate();
-    this.setState({ data, solved: false, message: '' });
+    this.setState({ data, solved: false, message: '', err: false });
   }
 
   validate() {
-    if (!sudoku.isFull(this.state.data)) {
-      this.setState({ message: 'Missing spots' });
-    } else {
-      const valid = sudoku.validate(this.state.data);
-      if (valid !== true) {
-        this.setState({ message: `Conflict with ${valid[0]} and ${valid[1]}.` });
-      } else this.setState({ message: 'Valid' });
-    }
+    const valid = sudoku.validate(this.state.data);
+    if (valid !== true) {
+      this.setState({
+        message: `Conflict with ${valid[0]} and ${valid[1]}.`,
+        err: [valid[0], valid[1]],
+      });
+    } else this.setState({ message: 'Valid', err: false });
   }
 
   update(id, val) {
-    // Function to update the game state from any individual block.
+    // Function called by a block to update global state.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
-    this.setState({ data, modified: true, solved: false }, console.log(this.state.data));
+    this.setState({ data, solved: false });
   }
 
   render() {
     // TODO: Fix prop drilling with context api.
+    // TODO: Put ui into its own component.
+    const { solved, message, err } = this.state;
     return (
       <Fragment>
-
         <div className="GameContainer">
           {this.state.data.map((row, i) => (
             <Row
@@ -79,7 +89,13 @@ class GameContainer extends Component {
               name={i.toString()}
               key={i}
               update={this.update}
-              solved={this.state.solved}
+              solved={solved}
+              err={
+                Array.isArray(err) && (
+                  err[0][0] === i ||
+                  err[1][0] === i
+                ) ? err : false
+              }
             />
           ))}
         </div>
@@ -94,8 +110,8 @@ class GameContainer extends Component {
           <button onClick={this.validate}>
             Validate
           </button>
-          <h4 className="message">
-            {this.state.message ? this.state.message : ''}
+          <h4 className={`message ${err ? 'err' : ''}`}>
+            {message || ''}
           </h4>
         </div>
       </Fragment>

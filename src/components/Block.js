@@ -11,19 +11,18 @@ class Block extends Component {
     };
 
     this.onChange = this.onChange.bind(this);
+    this.flash = this.flash.bind(this);
   }
 
   componentWillMount() {
-    this.setState({ val: this.props.val });
+    this.setState({ val: this.props.val, change: this.props.err });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.val !== this.state.val) {
       this.setState({ val: nextProps.val });
-      if (nextProps.solved) {
-        this.setState({ change: true });
-      } else this.setState({ change: false });
-    }
+      if (nextProps.solved) this.flash();
+    } else if (nextProps.err) this.flash();
   }
 
   onChange(e) {
@@ -42,6 +41,13 @@ class Block extends Component {
 
   onClick(e) {
     e.target.select();
+  }
+
+  flash() {
+    this.setState({ change: true });
+    setTimeout(() => {
+      this.setState({ change: false });
+    }, 1000);
   }
 
   render() {
@@ -68,6 +74,7 @@ Block.propTypes = {
   name: PropTypes.string,
   update: PropTypes.func,
   solved: PropTypes.bool,
+  err: PropTypes.bool,
 };
 
 Block.defaultProps = {
@@ -75,6 +82,7 @@ Block.defaultProps = {
   name: 'NONE',
   update: (() => { throw new Error('No update func passed to block'); }),
   solved: false,
+  err: false,
 };
 
 export default Block;

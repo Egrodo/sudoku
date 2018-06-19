@@ -52,7 +52,11 @@ div.ui button {
   margin: 0 .5em 0 .5em;
 }
 
-div.ui h4.message {
+h4.message {
+  color: green;
+}
+
+h4.message.err {
   color: red;
 }
 
