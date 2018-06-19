@@ -94,7 +94,6 @@ class GameContainer extends Component {
 
   render() {
     // TODO: Fix prop drilling with context api.
-    // TODO: Put ui into its own component.
     const { solved, message, err } = this.state;
     return (
       <Fragment>
@@ -117,14 +116,14 @@ class GameContainer extends Component {
         </div>
 
         <div className="ui">
-          <button onClick={this.clear}>
-            Clear
-          </button>
           <button onClick={this.reset}>
             New Puzzle
           </button>
           <button onClick={this.solve}>
             Solve
+          </button>
+          <button onClick={this.clear}>
+            Clear Board
           </button>
           <button onClick={this.validate}>
             Validate

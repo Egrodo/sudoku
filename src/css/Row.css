@@ -1,0 +1,12 @@
+div.Row {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: 1fr;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+div.Row:nth-of-type(3), div.Row:nth-of-type(6){
+  border-bottom: 2px solid white;
+}
