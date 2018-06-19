@@ -18,7 +18,13 @@ class Row extends Component {
     this.setState({ nums: nextProps.data });
   }
   render() {
-    const { name, err, update, solved } = this.props;
+    const {
+      name,
+      err,
+      update,
+      solved,
+    } = this.props;
+
     return (
       <div className="Row" id={name}>
         {this.state.nums.map((val, i) => (
@@ -46,6 +52,7 @@ Row.propTypes = {
   name: PropTypes.string,
   update: PropTypes.func,
   solved: PropTypes.bool,
+  /* eslint-disable-next-line */
   err: PropTypes.array,
 };
 

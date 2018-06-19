@@ -55,7 +55,12 @@ class GameContainer extends Component {
 
   reset() {
     const data = sudoku.generate();
-    this.setState({ data, solved: false, message: '', err: false });
+    this.setState({
+      data,
+      solved: false,
+      message: '',
+      err: false,
+    });
   }
 
   validate() {

@@ -101,6 +101,7 @@ const possibilities = (board, i, j) => {
   return ans;
 };
 
+/* eslint-disable consistent-return */
 const solve = (board) => {
   // Base case for recurse, check if board is full.
   if (isFull(board)) return true;
