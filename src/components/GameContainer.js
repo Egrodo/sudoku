@@ -16,6 +16,7 @@ class GameContainer extends Component {
     this.validate = this.validate.bind(this);
     this.update = this.update.bind(this);
     this.reset = this.reset.bind(this);
+    this.clear = this.clear.bind(this);
     this.solve = this.solve.bind(this);
   }
 
@@ -73,6 +74,11 @@ class GameContainer extends Component {
     } else this.setState({ message: 'Valid', err: false });
   }
 
+  clear() {
+    const clear = sudoku.clear(this.state.data);
+    this.setState({ message: 'Cleared', err: false });
+  }
+
   update(id, val) {
     // Function called by a block to update global state.
     const [row, col] = id.split('-'); // Retrieve indexes
@@ -108,6 +114,9 @@ class GameContainer extends Component {
         <div className="ui">
           <button onClick={this.reset}>
             Reset
+          </button>
+          <button onClick={this.clear}>
+            Clear
           </button>
           <button onClick={this.solve}>
             Solve
