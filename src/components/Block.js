@@ -10,6 +10,7 @@ class Block extends Component {
       change: false,
     };
 
+    this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
     this.flash = this.flash.bind(this);
   }
@@ -26,7 +27,8 @@ class Block extends Component {
   }
 
   onChange(e) {
-    let val = e.target.value;
+    console.log(e.target.value);
+    let val = String(e.target.value);
     // Handle input parsing. Convert to ints, blanks handled as zeros in code.
     if (val.length > 1) return;
     if (val === '' || val === ' ') val = 0;
@@ -41,6 +43,10 @@ class Block extends Component {
 
   onClick(e) {
     e.target.select();
+  }
+
+  onBlur(e) {
+    e.currentTarget.blur();
   }
 
   flash() {
@@ -59,7 +65,12 @@ class Block extends Component {
             value={val === 0 ? '' : val}
             onChange={this.onChange}
             onClick={this.onClick}
-            type="text"
+            onBlur={this.onBlur}
+            type="tel"
+            autoCorrect="off"
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck="off"
             disabled={disabled}
             maxLength="1"
           />

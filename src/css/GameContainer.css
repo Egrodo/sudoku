@@ -44,6 +44,7 @@ div.ui button:active {
 
 h4.message {
   grid-area: msg;
+  height: 1em;
   color: green;
 }
 
@@ -54,7 +55,7 @@ h4.message.err {
 @media only screen and (min-width: 655px) {
   div.GameContainer {
     width: 65vw;
-    height: 65vw
+    height: 65vw;
   }
 }
 
@@ -86,5 +87,11 @@ h4.message.err {
     height: 20em;
     width: 20em;
     font-size: 1.1em;
+  }
+}
+
+@media only screen and (max-height: 550px) {
+  div.GameContainer {
+    height: 20em;
   }
 }
