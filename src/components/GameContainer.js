@@ -11,6 +11,8 @@ class GameContainer extends Component {
       solved: false,
       message: '',
       err: true,
+      reset: false,
+      clear: false,
     };
 
     this.validate = this.validate.bind(this);
@@ -55,16 +57,25 @@ class GameContainer extends Component {
   }
 
   reset() {
-    const data = sudoku.generate();
-    this.setState({
-      data,
-      solved: false,
-      message: '',
-      err: false,
-    });
+    if (this.state.reset) {
+      const data = sudoku.generate();
+      this.setState({
+        data,
+        solved: false,
+        message: '',
+        err: false,
+        reset: false,
+      });
+    } else {
+      this.setState({ reset: true });
+      setTimeout(() => {
+        this.setState({ reset: false });
+      }, 5000);
+    }
   }
 
   validate() {
+    // TODO: Validate is fucked.
     const valid = sudoku.validate(this.state.data);
     if (valid !== true) {
       this.setState({
@@ -75,13 +86,20 @@ class GameContainer extends Component {
   }
 
   clear() {
-    const cleared = this.state.data.map((v => v.map(l => 0)));
-    this.setState({
-      data: cleared,
-      message: 'Cleared',
-      err: false,
-      solved: false,
-    });
+    if (this.state.clear) {
+      const cleared = this.state.data.map((v => v.map(l => 0)));
+      this.setState({
+        data: cleared,
+        message: 'Cleared',
+        err: false,
+        solved: false,
+      });
+    } else {
+      this.setState({ clear: true });
+      setTimeout(() => {
+        this.setState({ clear: false });
+      }, 5000);
+    }
   }
 
   update(id, val) {
@@ -94,11 +112,20 @@ class GameContainer extends Component {
 
   render() {
     // TODO: Fix prop drilling with context api.
-    const { solved, message, err } = this.state;
+    // TODO: Replace clear with undo tracking back thru history?
+    const {
+      solved,
+      message,
+      err,
+      data,
+      clear,
+      reset,
+    } = this.state;
+
     return (
       <Fragment>
         <div className="GameContainer">
-          {this.state.data.map((row, i) => (
+          {data.map((row, i) => (
             <Row
               data={row}
               name={i.toString()}
@@ -116,14 +143,14 @@ class GameContainer extends Component {
         </div>
 
         <div className="ui">
-          <button onClick={this.reset}>
-            New Puzzle
+          <button onClick={this.reset} className={reset ? 'timer' : ''}>
+            {reset ? 'Confirm?' : 'New Puzzle'}
           </button>
           <button onClick={this.solve}>
             Solve
           </button>
-          <button onClick={this.clear}>
-            Clear Board
+          <button onClick={this.clear} className={clear ? 'timer' : ''}>
+            {clear ? 'Confirm?' : 'Clear Board'}
           </button>
           <button onClick={this.validate}>
             Validate

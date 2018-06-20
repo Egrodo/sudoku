@@ -45,7 +45,7 @@ class Block extends Component {
   }
 
   onBlur(e) {
-    e.currentTarget.blur();
+    e.target.blur();
   }
 
   flash() {
@@ -66,10 +66,6 @@ class Block extends Component {
             onClick={this.onClick}
             onBlur={this.onBlur}
             type="tel"
-            autoCorrect="off"
-            autoComplete="off"
-            autoCapitalize="off"
-            spellCheck="off"
             disabled={disabled}
             maxLength="1"
           />

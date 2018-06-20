@@ -30,13 +30,25 @@ div.ui button {
   text-decoration: none;
   display: inline-block;
   font-size: 1em;
-  transition-duration: .8s;
+}
+
+div.ui button.timer {
+  animation-timing-function: ease;
+  animation-duration: 6s;
+  animation-iteration-count: 1;
+  animation-name: timer;
+  animation-iteration-count: infinite;
+}
+
+@keyframes timer {
+  0% { background-color: green }
+  70% { background-color: #034e00 }
+  100% { background-color: #2a013a }
 }
 
 div.ui button:nth-of-type(2) { grid-area: btn1; }
 div.ui button:nth-of-type(3) { grid-area: btn2; }
 div.ui button:nth-of-type(4) { grid-area: btn3; }
-
 
 div.ui button:active {
   background-color: #4a0067;
