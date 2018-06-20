@@ -89,7 +89,7 @@ class GameContainer extends Component {
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
-    this.setState({ data, solved: false });
+    this.setState({ data, solved: false, err: false });
   }
 
   render() {

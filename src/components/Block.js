@@ -27,7 +27,6 @@ class Block extends Component {
   }
 
   onChange(e) {
-    console.log(e.target.value);
     let val = String(e.target.value);
     // Handle input parsing. Convert to ints, blanks handled as zeros in code.
     if (val.length > 1) return;
