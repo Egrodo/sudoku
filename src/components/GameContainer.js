@@ -23,7 +23,8 @@ class GameContainer extends Component {
   }
 
   componentWillMount() {
-    this.setState({ data: sudoku.generate() });
+    const data = sudoku.solve(sudoku.generate());
+    this.setState({ data }, console.log(this.state.data));
   }
 
   solve() {

@@ -1,14 +1,14 @@
-const generate = () => [
-  [0, 0, 0, 2, 0, 4, 8, 1, 0],
-  [0, 4, 0, 0, 0, 8, 2, 6, 3],
-  [3, 0, 0, 1, 6, 0, 0, 0, 4],
-  [1, 0, 0, 0, 4, 0, 5, 8, 0],
-  [6, 3, 5, 8, 2, 0, 0, 0, 7],
-  [2, 0, 0, 5, 9, 0, 1, 0, 0],
-  [9, 1, 0, 7, 0, 0, 0, 4, 0],
-  [0, 0, 0, 6, 8, 0, 0, 2, 0],
-  [8, 0, 0, 4, 0, 3, 7, 5, 9],
-];
+// const generate = () => [
+//   [0, 0, 0, 2, 0, 4, 8, 1, 0],
+//   [0, 4, 0, 0, 0, 8, 2, 6, 3],
+//   [3, 0, 0, 1, 6, 0, 0, 0, 4],
+//   [1, 0, 0, 0, 4, 0, 5, 8, 0],
+//   [6, 3, 5, 8, 2, 0, 0, 0, 7],
+//   [2, 0, 0, 5, 9, 0, 1, 0, 0],
+//   [9, 1, 0, 7, 0, 0, 0, 4, 0],
+//   [0, 0, 0, 6, 8, 0, 0, 2, 0],
+//   [8, 0, 0, 4, 0, 3, 7, 5, 9],
+// ];
 
 const shuffle = (arr) => {
   let j = 0;
@@ -22,10 +22,30 @@ const shuffle = (arr) => {
   return arr;
 };
 
-const row = shuffle([1, 2, 3, 4, 5, 6, 7, 7, 8]); // Generate random first row.
-let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-col.splice((row[0] - 1), 1);
-col = shuffle(col);
+const generate = () => {
+  const row = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]); // Generate random first row.
+  let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  col.splice((row[0] - 1), 1);
+  col = shuffle(col);
+
+  // Col starts at row[1]
+  while (col[0] === row[1] || col[0] === row[2]) {
+    col.push(col[0]);
+    col.splice(0, 1);
+  }
+
+  while (col[1] === row[1] || col[1] === row[2]) {
+    col.push(col[1]);
+    col.splice(1, 1);
+  }
+
+  const board = Array(Array(9).fill(0));
+  for (let i = 0; i < 8; i++) board.push(Array(9).fill(0));
+  board[0] = row;
+
+  for (let i = 1; i < 9; i++) board[i][0] = col[i - 1];
+  return board;
+};
 
 const isFull = (board) => {
   for (let i = 0; i < 9; i++) {
@@ -35,6 +55,7 @@ const isFull = (board) => {
   }
   return true;
 };
+
 
 const validate = (board) => {
   // Accepts a full or unfinished board and returns
