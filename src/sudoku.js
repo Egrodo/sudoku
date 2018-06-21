@@ -1,14 +1,11 @@
-// const generate = () => [
-//   [0, 0, 0, 2, 0, 4, 8, 1, 0],
-//   [0, 4, 0, 0, 0, 8, 2, 6, 3],
-//   [3, 0, 0, 1, 6, 0, 0, 0, 4],
-//   [1, 0, 0, 0, 4, 0, 5, 8, 0],
-//   [6, 3, 5, 8, 2, 0, 0, 0, 7],
-//   [2, 0, 0, 5, 9, 0, 1, 0, 0],
-//   [9, 1, 0, 7, 0, 0, 0, 4, 0],
-//   [0, 0, 0, 6, 8, 0, 0, 2, 0],
-//   [8, 0, 0, 4, 0, 3, 7, 5, 9],
-// ];
+const createDifficulty = (board, diff = 20) => {
+  for (let i = 0; i < diff; i++) {
+    const x = Math.floor((Math.random() * 9));
+    const y = Math.floor((Math.random() * 9));
+    board[x][y] = 0;
+  }
+  return board;
+};
 
 const shuffle = (arr) => {
   let j = 0;
@@ -23,12 +20,11 @@ const shuffle = (arr) => {
 };
 
 const generate = () => {
-  const row = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]); // Generate random first row.
+  const row = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   col.splice((row[0] - 1), 1);
   col = shuffle(col);
 
-  // Col starts at row[1]
   while (col[0] === row[1] || col[0] === row[2]) {
     col.push(col[0]);
     col.splice(0, 1);
@@ -44,6 +40,9 @@ const generate = () => {
   board[0] = row;
 
   for (let i = 1; i < 9; i++) board[i][0] = col[i - 1];
+
+  // return solve(board);
+
   return board;
 };
 
@@ -177,4 +176,5 @@ module.exports = {
   generate,
   validate,
   solve,
+  createDifficulty,
 };

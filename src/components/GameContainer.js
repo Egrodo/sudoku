@@ -59,8 +59,10 @@ class GameContainer extends Component {
 
   reset() {
     if (this.state.reset) {
-      const data = sudoku.generate();
+      let diff = 32;
+      const data = sudoku.createDifficulty(sudoku.solve(sudoku.generate()), diff);
       this.setState({
+        diff,
         data,
         solved: false,
         message: '',
