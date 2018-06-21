@@ -8,23 +8,26 @@ class GameContainer extends Component {
     super();
     this.state = {
       data: [],
+      originalData: [],
       solved: false,
       message: '',
       err: true,
-      reset: false,
+      confirmNG: false,
       clear: false,
     };
 
     this.update = this.update.bind(this);
     this.check = this.check.bind(this);
-    this.reset = this.reset.bind(this);
+    this.newGame = this.newGame.bind(this);
     this.solve = this.solve.bind(this);
-    this.clear = this.clear.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   componentWillMount() {
-    const data = sudoku.solve(sudoku.generate());
-    this.setState({ data });
+    const data = sudoku.removeSpots(sudoku.setup(), 50);
+    const orig = data.slice(0);
+    // BUG: How the fuck are data and originalData being modified at the same time?
+    this.setState({ data, originalData: orig });
   }
 
   solve() {
@@ -57,29 +60,30 @@ class GameContainer extends Component {
     }
   }
 
-  reset() {
-    if (this.state.reset) {
-      let diff = 32;
-      const data = sudoku.createDifficulty(sudoku.solve(sudoku.generate()), diff);
+  newGame(event, diff) {
+    // If the user clicks confirm.
+    if (this.state.confirmNG) {
+      const data = sudoku.removeSpots(sudoku.setup(), diff);
       this.setState({
-        diff,
         data,
+        originalData: data,
         solved: false,
         message: '',
         err: false,
-        reset: false,
+        confirmNG: false,
       });
     } else {
       // BUG: Spamming this breaks it.
-      this.setState({ reset: true });
+      this.setState({ confirmNG: true });
       setTimeout(() => {
-        this.setState({ reset: false });
+        this.setState({ confirmNG: false });
       }, 5000);
     }
   }
 
   clear() {
     if (this.state.clear) {
+      /* eslint-disable-next-line */
       const cleared = this.state.data.map((v => v.map(l => 0)));
       this.setState({
         data: cleared,
@@ -96,7 +100,12 @@ class GameContainer extends Component {
   }
 
   check() {
+    // Loop through data and check if that same spot in originalData is the same value.
+  }
 
+  reset() {
+    const orig = [...this.state.originalData];
+    this.setState({ data: orig });
   }
 
   update(id, val) {
@@ -120,7 +129,7 @@ class GameContainer extends Component {
       err,
       data,
       clear,
-      reset,
+      confirmNG,
     } = this.state;
 
     /* Ternary to sort errors into their respective blocks:
@@ -159,13 +168,13 @@ class GameContainer extends Component {
         </div>
 
         <div className="ui">
-          <button onClick={this.reset} className={reset ? 'timer' : ''}>
-            {reset ? 'Confirm?' : 'New Game'}
+          <button onClick={this.newGame} className={confirmNG ? 'timer' : ''}>
+            {confirmNG ? 'Confirm?' : 'New Game'}
           </button>
           <button onClick={this.solve}>
             Solve
           </button>
-          <button onClick={this.clear} className={clear ? 'timer' : ''}>
+          <button onClick={this.reset} className={clear ? 'timer' : ''}>
             {clear ? 'Confirm?' : '! Reset Game'}
           </button>
           <button onClick={this.check}>

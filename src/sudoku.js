@@ -1,50 +1,4 @@
-const createDifficulty = (board, diff = 20) => {
-  for (let i = 0; i < diff; i++) {
-    const x = Math.floor((Math.random() * 9));
-    const y = Math.floor((Math.random() * 9));
-    board[x][y] = 0;
-  }
-  return board;
-};
-
-const shuffle = (arr) => {
-  let j = 0;
-  let temp;
-  for (let i = arr.length - 1; i > 0; --i) {
-    j = Math.floor(Math.random() * (i + 1));
-    temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-  }
-  return arr;
-};
-
-const generate = () => {
-  const row = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  col.splice((row[0] - 1), 1);
-  col = shuffle(col);
-
-  while (col[0] === row[1] || col[0] === row[2]) {
-    col.push(col[0]);
-    col.splice(0, 1);
-  }
-
-  while (col[1] === row[1] || col[1] === row[2]) {
-    col.push(col[1]);
-    col.splice(1, 1);
-  }
-
-  const board = Array(Array(9).fill(0));
-  for (let i = 0; i < 8; i++) board.push(Array(9).fill(0));
-  board[0] = row;
-
-  for (let i = 1; i < 9; i++) board[i][0] = col[i - 1];
-
-  // return solve(board);
-
-  return board;
-};
+/* eslint-disable consistent-return */
 
 const isFull = (board) => {
   for (let i = 0; i < 9; i++) {
@@ -97,7 +51,7 @@ const validate = (board) => {
   return true;
 };
 
-// Generate array of possibilities for given point.
+// Crray of possibilities for given point.
 const possibilities = (board, i, j) => {
   if (i > 8 || i < 0 || j > 8 || j < 0) throw new Error('Invalid coords.');
   if (board[i][j] !== 0) throw new Error('This spot is taken.');
@@ -137,7 +91,7 @@ const possibilities = (board, i, j) => {
   return ans;
 };
 
-/* eslint-disable consistent-return */
+// Solve a not fully formed board.
 const solve = (board) => {
   // Base case for recurse, check if board is full.
   if (isFull(board)) return true;
@@ -171,10 +125,59 @@ const solve = (board) => {
   }
 };
 
+// Remove random spots from a solved board given a difficulty.
+const removeSpots = (board, diff = 20) => {
+  for (let i = 0; i < diff; i++) {
+    const x = Math.floor((Math.random() * 9));
+    const y = Math.floor((Math.random() * 9));
+    board[x][y] = 0;
+  }
+  return board;
+};
+
+// Randomly shuffle an array.
+const shuffle = (arr) => {
+  let j = 0;
+  let temp;
+  for (let i = arr.length - 1; i > 0; --i) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
+};
+
+// Initliaze a random seed board to solve.
+const setup = () => {
+  const row = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  col.splice((row[0] - 1), 1);
+  col = shuffle(col);
+
+  while (col[0] === row[1] || col[0] === row[2]) {
+    col.push(col[0]);
+    col.splice(0, 1);
+  }
+
+  while (col[1] === row[1] || col[1] === row[2]) {
+    col.push(col[1]);
+    col.splice(1, 1);
+  }
+
+  const board = Array(Array(9).fill(0));
+  for (let i = 0; i < 8; i++) board.push(Array(9).fill(0));
+  board[0] = row;
+
+  for (let i = 1; i < 9; i++) board[i][0] = col[i - 1];
+
+  return solve(board);
+};
+
 module.exports = {
   isFull,
-  generate,
+  setup,
   validate,
   solve,
-  createDifficulty,
+  removeSpots,
 };
