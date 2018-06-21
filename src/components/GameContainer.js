@@ -12,8 +12,6 @@ class GameContainer extends Component {
       solved: false,
       message: '',
       err: true,
-      confirmNG: false,
-      clear: false,
     };
 
     this.update = this.update.bind(this);
@@ -25,8 +23,14 @@ class GameContainer extends Component {
 
   componentWillMount() {
     const data = sudoku.removeSpots(sudoku.setup(), 50);
-    const orig = data.slice(0);
-    // BUG: How the fuck are data and originalData being modified at the same time?
+    // Uniquely copy 2d array
+    const orig = [];
+    for (let i = 0; i < 9; ++i) {
+      orig[i] = [];
+      for (let n = 0; n < 9; ++n) {
+        orig[i][n] = data[i][n];
+      }
+    }
     this.setState({ data, originalData: orig });
   }
 
@@ -62,40 +66,20 @@ class GameContainer extends Component {
 
   newGame(event, diff) {
     // If the user clicks confirm.
-    if (this.state.confirmNG) {
-      const data = sudoku.removeSpots(sudoku.setup(), diff);
+    const data = sudoku.removeSpots(sudoku.setup(), diff);
+    const orig = [];
+    for (let i = 0; i < 9; ++i) {
+      orig[i] = [];
+      for (let n = 0; n < 9; ++n) {
+        orig[i][n] = data[i][n];
+      }
       this.setState({
         data,
-        originalData: data,
+        originalData: orig,
         solved: false,
         message: '',
         err: false,
-        confirmNG: false,
       });
-    } else {
-      // BUG: Spamming this breaks it.
-      this.setState({ confirmNG: true });
-      setTimeout(() => {
-        this.setState({ confirmNG: false });
-      }, 5000);
-    }
-  }
-
-  clear() {
-    if (this.state.clear) {
-      /* eslint-disable-next-line */
-      const cleared = this.state.data.map((v => v.map(l => 0)));
-      this.setState({
-        data: cleared,
-        message: 'Cleared',
-        err: false,
-        solved: false,
-      });
-    } else {
-      this.setState({ clear: true });
-      setTimeout(() => {
-        this.setState({ clear: false });
-      }, 5000);
     }
   }
 
@@ -104,8 +88,21 @@ class GameContainer extends Component {
   }
 
   reset() {
-    const orig = [...this.state.originalData];
-    this.setState({ data: orig });
+    const data = this.state.originalData;
+    const orig = [];
+    for (let i = 0; i < 9; ++i) {
+      orig[i] = [];
+      for (let n = 0; n < 9; ++n) {
+        orig[i][n] = data[i][n];
+      }
+    }
+
+    this.setState({
+      data: orig,
+      solved: false,
+      err: false,
+      message: 'Reset',
+    });
   }
 
   update(id, val) {
@@ -117,31 +114,28 @@ class GameContainer extends Component {
     if (valid === true) {
       this.setState({ data, solved: false, err: false });
     } else this.setState({ err: [valid[0], valid[1]] });
-    // BUG: This is working, but it's not sending flash properly.
   }
 
   render() {
     // TODO: Fix prop drilling with context api.
-    // TODO: Replace clear with undo tracking back thru history?
     const {
       solved,
       message,
       err,
       data,
-      clear,
-      confirmNG,
     } = this.state;
 
-    /* Ternary to sort errors into their respective blocks:
-      if err is an array (if there are errors) {
-        if both errors exist on the same row {
-          send the whole err arr with both errors
-        } else if err exists on any given row {
-          send to that row
-        } else if the other err exists on the given row {
-          send to that row
+    /*
+      Ternary to sort errors into their respective blocks:
+        if err is an array (if there are errors) {
+          if both errors exist on the same row {
+            send the whole err arr with both errors
+          } else if err exists on any given row {
+            send to that row
+          } else if the other err exists on the given row {
+            send to that row
+          }
         }
-      }
     */
 
     return (
@@ -168,14 +162,14 @@ class GameContainer extends Component {
         </div>
 
         <div className="ui">
-          <button onClick={this.newGame} className={confirmNG ? 'timer' : ''}>
-            {confirmNG ? 'Confirm?' : 'New Game'}
+          <button onClick={this.newGame}>
+            New Game
           </button>
           <button onClick={this.solve}>
             Solve
           </button>
-          <button onClick={this.reset} className={clear ? 'timer' : ''}>
-            {clear ? 'Confirm?' : '! Reset Game'}
+          <button onClick={this.reset}>
+            Reset Game
           </button>
           <button onClick={this.check}>
             ! Check
