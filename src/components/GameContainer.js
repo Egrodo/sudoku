@@ -24,7 +24,7 @@ class GameContainer extends Component {
 
   componentWillMount() {
     const data = sudoku.solve(sudoku.generate());
-    this.setState({ data }, console.log(this.state.data));
+    this.setState({ data });
   }
 
   solve() {
@@ -59,8 +59,10 @@ class GameContainer extends Component {
 
   reset() {
     if (this.state.reset) {
-      const data = sudoku.generate();
+      let diff = 32;
+      const data = sudoku.createDifficulty(sudoku.solve(sudoku.generate()), diff);
       this.setState({
+        diff,
         data,
         solved: false,
         message: '',
