@@ -15,8 +15,8 @@ class GameContainer extends Component {
       clear: false,
     };
 
-    this.validate = this.validate.bind(this);
     this.update = this.update.bind(this);
+    this.check = this.check.bind(this);
     this.reset = this.reset.bind(this);
     this.solve = this.solve.bind(this);
     this.clear = this.clear.bind(this);
@@ -24,7 +24,7 @@ class GameContainer extends Component {
 
   componentWillMount() {
     const data = sudoku.solve(sudoku.generate());
-    this.setState({ data }, console.log(this.state.data));
+    this.setState({ data });
   }
 
   solve() {
@@ -68,22 +68,12 @@ class GameContainer extends Component {
         reset: false,
       });
     } else {
+      // BUG: Spamming this breaks it.
       this.setState({ reset: true });
       setTimeout(() => {
         this.setState({ reset: false });
       }, 5000);
     }
-  }
-
-  validate() {
-    // TODO: Validate is fucked.
-    const valid = sudoku.validate(this.state.data);
-    if (valid !== true) {
-      this.setState({
-        message: `Conflict with ${valid[0]} and ${valid[1]}.`,
-        err: [valid[0], valid[1]],
-      });
-    } else this.setState({ message: 'Valid', err: false });
   }
 
   clear() {
@@ -103,13 +93,20 @@ class GameContainer extends Component {
     }
   }
 
+  check() {
+
+  }
+
   update(id, val) {
     // Function called by a block to update global state.
-    // TODO: Validate on keypress.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
-    this.setState({ data, solved: false, err: false });
+    const valid = sudoku.validate(data);
+    if (valid === true) {
+      this.setState({ data, solved: false, err: false });
+    } else this.setState({ err: [valid[0], valid[1]] });
+    // BUG: This is working, but it's not sending flash properly.
   }
 
   render() {
@@ -124,6 +121,18 @@ class GameContainer extends Component {
       reset,
     } = this.state;
 
+    /* Ternary to sort errors into their respective blocks:
+      if err is an array (if there are errors) {
+        if both errors exist on the same row {
+          send the whole err arr with both errors
+        } else if err exists on any given row {
+          send to that row
+        } else if the other err exists on the given row {
+          send to that row
+        }
+      }
+    */
+
     return (
       <Fragment>
         <div className="GameContainer">
@@ -135,10 +144,13 @@ class GameContainer extends Component {
               update={this.update}
               solved={solved}
               err={
-                Array.isArray(err) && (
-                  err[0][0] === i ||
-                  err[1][0] === i
-                ) ? err : false
+                Array.isArray(err) ? (
+                  err[0][0] === i && err[1][0] === i ? err : (
+                    err[0][0] === i ? err[0] : (
+                      err[1][0] === i ? err[1] : false
+                    )
+                  )
+                ) : false
               }
             />
           ))}
@@ -146,16 +158,16 @@ class GameContainer extends Component {
 
         <div className="ui">
           <button onClick={this.reset} className={reset ? 'timer' : ''}>
-            {reset ? 'Confirm?' : 'New Puzzle'}
+            {reset ? 'Confirm?' : 'New Game'}
           </button>
           <button onClick={this.solve}>
             Solve
           </button>
           <button onClick={this.clear} className={clear ? 'timer' : ''}>
-            {clear ? 'Confirm?' : 'Clear Board'}
+            {clear ? 'Confirm?' : '! Reset Game'}
           </button>
-          <button onClick={this.validate}>
-            Validate
+          <button onClick={this.check}>
+            ! Check
           </button>
           <h4 className={`message ${err ? 'err' : ''}`}>
             {message || ''}

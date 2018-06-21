@@ -7,12 +7,11 @@ class Block extends Component {
     super();
     this.state = {
       val: '',
-      change: false,
+      flash: false,
     };
 
     this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.flash = this.flash.bind(this);
   }
 
   componentWillMount() {
@@ -22,8 +21,11 @@ class Block extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.val !== this.state.val) {
       this.setState({ val: nextProps.val });
-      if (nextProps.solved) this.flash();
-    } else if (nextProps.err) this.flash();
+    }
+    if (nextProps.err) {
+      this.setState({ flash: true });
+    } else this.setState({ flash: false });
+    // TODO: Maintain solved flashing.
   }
 
   onChange(e) {
@@ -41,29 +43,26 @@ class Block extends Component {
   }
 
   onClick(e) {
-    e.target.select();
+    e.currentTarget.firstChild.firstChild.select();
   }
 
   onBlur(e) {
     e.target.blur();
   }
 
-  flash() {
-    this.setState({ change: true });
-    setTimeout(() => {
-      this.setState({ change: false });
-    }, 1000);
-  }
-
   render() {
-    const { change, val, disabled } = this.state;
+    const { flash, val, disabled } = this.state;
     return (
-      <div className={`Block ${change ? 'change' : ''}`} id={this.props.name}>
+      <div
+        className={`Block ${flash ? 'flash' : ''}`}
+        id={this.props.name}
+        onClick={this.onClick}
+        role="presentation"
+      >
         <form onSubmit={this.onSubmit}>
           <input
             value={val === 0 ? '' : val}
             onChange={this.onChange}
-            onClick={this.onClick}
             onBlur={this.onBlur}
             type="tel"
             disabled={disabled}
