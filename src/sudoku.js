@@ -10,6 +10,22 @@ const generate = () => [
   [8, 0, 0, 4, 0, 3, 7, 5, 9],
 ];
 
+const shuffle = (arr) => {
+  let j = 0;
+  let temp;
+  for (let i = arr.length - 1; i > 0; --i) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
+};
+
+const row = shuffle([1, 2, 3, 4, 5, 6, 7, 7, 8]); // Generate random first row.
+let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+col.splice((row[0] - 1), 1);
+col = shuffle(col);
 
 const isFull = (board) => {
   for (let i = 0; i < 9; i++) {

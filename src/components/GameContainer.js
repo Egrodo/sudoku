@@ -104,6 +104,7 @@ class GameContainer extends Component {
 
   update(id, val) {
     // Function called by a block to update global state.
+    // TODO: Validate on keypress.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
