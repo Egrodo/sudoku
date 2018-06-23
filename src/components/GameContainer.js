@@ -14,27 +14,25 @@ class GameContainer extends Component {
       err: true,
     };
 
+    this.newGame = this.newGame.bind(this);
     this.update = this.update.bind(this);
     this.check = this.check.bind(this);
-    this.newGame = this.newGame.bind(this);
     this.solve = this.solve.bind(this);
     this.reset = this.reset.bind(this);
   }
 
   componentWillMount() {
     const data = sudoku.removeSpots(sudoku.setup(), 50);
-    // Uniquely copy 2d array
-    const orig = [];
-    for (let i = 0; i < 9; ++i) {
-      orig[i] = [];
-      for (let n = 0; n < 9; ++n) {
-        orig[i][n] = data[i][n];
-      }
-    }
-    this.setState({ data, originalData: orig });
+    /* For the unique copy, I realized we didn't need 2 for loops, only one,
+       because the nums in the second array are immutable. Then once I had it
+       working with one for loop, and since I needed to turn the results of the
+       operation into another variable, map was the obvious choice.
+    */
+    this.setState({ data, originalData: data.map(v => v.slice(0)) });
   }
 
   solve() {
+    // TODO: Keep the block flashing on solve and reset.
     // Check if already solved before modifing.
     if (this.state.solved) {
       this.setState({ message: 'Already solved.', err: true });
@@ -58,7 +56,8 @@ class GameContainer extends Component {
         this.setState({
           data: solved,
           solved: true,
-          message: '',
+          message: 'Solved',
+          err: false,
         });
       }
     }
@@ -67,20 +66,13 @@ class GameContainer extends Component {
   newGame(event, diff) {
     // If the user clicks confirm.
     const data = sudoku.removeSpots(sudoku.setup(), diff);
-    const orig = [];
-    for (let i = 0; i < 9; ++i) {
-      orig[i] = [];
-      for (let n = 0; n < 9; ++n) {
-        orig[i][n] = data[i][n];
-      }
-      this.setState({
-        data,
-        originalData: orig,
-        solved: false,
-        message: '',
-        err: false,
-      });
-    }
+    this.setState({
+      data,
+      originalData: data.map(v => v.slice(0)),
+      solved: false,
+      message: '',
+      err: false,
+    });
   }
 
   check() {
@@ -89,16 +81,8 @@ class GameContainer extends Component {
 
   reset() {
     const data = this.state.originalData;
-    const orig = [];
-    for (let i = 0; i < 9; ++i) {
-      orig[i] = [];
-      for (let n = 0; n < 9; ++n) {
-        orig[i][n] = data[i][n];
-      }
-    }
-
     this.setState({
-      data: orig,
+      data: data.map(v => v.slice(0)),
       solved: false,
       err: false,
       message: 'Reset',
