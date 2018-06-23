@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 
+// Check if a passed board is full for base-case.
 const isFull = (board) => {
   for (let i = 0; i < 9; i++) {
     for (let n = 0; n < 9; n++) {
@@ -9,7 +10,7 @@ const isFull = (board) => {
   return true;
 };
 
-
+// Validate that a passed board is valid across row, col, block.
 const validate = (board) => {
   // Accepts a full or unfinished board and returns
   // either true (indicating valid) or an array of
@@ -51,7 +52,7 @@ const validate = (board) => {
   return true;
 };
 
-// Crray of possibilities for given point.
+// Create array of possibilities for any given point.
 const possibilities = (board, i, j) => {
   if (i > 8 || i < 0 || j > 8 || j < 0) throw new Error('Invalid coords.');
   if (board[i][j] !== 0) throw new Error('This spot is taken.');
@@ -130,6 +131,7 @@ const removeSpots = (board, diff = 20) => {
   for (let i = 0; i < diff; i++) {
     const x = Math.floor((Math.random() * 9));
     const y = Math.floor((Math.random() * 9));
+    // Bug or feature? x and y can sometimes conflict making the exact removal number inconsistent.
     board[x][y] = 0;
   }
   return board;

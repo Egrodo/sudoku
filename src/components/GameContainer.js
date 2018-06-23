@@ -23,14 +23,16 @@ class GameContainer extends Component {
 
   componentWillMount() {
     const data = sudoku.removeSpots(sudoku.setup(), 50);
-    /* For the unique copy, I realized we didn't need 2 for loops, only one,
-       because the nums in the second array are immutable. Then once I had it
-       working with one for loop, and since I needed to turn the results of the
-       operation into another variable, map was the obvious choice.
+    /*
+      For the unique copy, I realized we didn't need 2 for loops, only one
+      because the nums in the second array are immutable. Then once I had it
+      working with one for loop, and since I needed to turn the results of the
+      operation into a new array, map + slice was obvious.
     */
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
   }
 
+  // Attempt to solve current board.
   solve() {
     // TODO: Keep the block flashing on solve and reset.
     // Check if already solved before modifing.
@@ -63,8 +65,9 @@ class GameContainer extends Component {
     }
   }
 
-  newGame(event, diff) {
-    // If the user clicks confirm.
+  // Generate new game.
+  newGame(e, diff) {
+    // TODO: Choose difficulty
     const data = sudoku.removeSpots(sudoku.setup(), diff);
     this.setState({
       data,
@@ -75,10 +78,12 @@ class GameContainer extends Component {
     });
   }
 
+  // Check current game against correct solution.
   check() {
     // Loop through data and check if that same spot in originalData is the same value.
   }
 
+  // Reset the board to unmodified state.
   reset() {
     const data = this.state.originalData;
     this.setState({
@@ -89,8 +94,8 @@ class GameContainer extends Component {
     });
   }
 
+  // Function called by a block to update global state.
   update(id, val) {
-    // Function called by a block to update global state.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
@@ -114,7 +119,7 @@ class GameContainer extends Component {
         if err is an array (if there are errors) {
           if both errors exist on the same row {
             send the whole err arr with both errors
-          } else if err exists on any given row {
+          } else if the first err exists on any given row {
             send to that row
           } else if the other err exists on the given row {
             send to that row
