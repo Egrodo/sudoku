@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import '../css/UserInterface.css';
 
 class UserInterface extends Component {
   constructor() {
@@ -28,27 +29,27 @@ class UserInterface extends Component {
       this.setState({ diff: true });
       this.timer = setTimeout(() => { this.setState({ diff: false }); }, 3000);
     } else {
-      console.error("Shouldn't get here, diffToggle.");
+      alert("Shouldn't get here, diffToggle.");
     }
   }
 
   render() {
     // TODO: Better way of doing conditional return?
-
+    // TODO: CSS timer
     const { methods } = this.props;
     if (this.state.diff) {
       return (
         <div className="ui">
-          <button onClick={() => methods.newGame(null, 20)}>
+          <button onClick={() => methods.newGame(null, 20)} className="timer">
             Easy
           </button>
-          <button onClick={() => methods.newGame(null, 40)}>
+          <button onClick={() => methods.newGame(null, 40)} className="timer">
             Medium
           </button>
-          <button onClick={() => methods.newGame(null, 50)}>
+          <button onClick={() => methods.newGame(null, 50)} className="timer">
             Hard
           </button>
-          <button onClick={() => methods.newGame(null, 64)}>
+          <button onClick={() => methods.newGame(null, 64)} className="timer">
             Impossible
           </button>
           <h4 className={`message ${this.props.err ? 'err' : ''}`}>

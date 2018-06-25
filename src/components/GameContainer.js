@@ -5,6 +5,7 @@ import sudoku from '../sudoku';
 import '../css/GameContainer.css';
 
 class GameContainer extends Component {
+  // TODO: sessionStorage
   constructor() {
     super();
     this.state = {
@@ -32,6 +33,7 @@ class GameContainer extends Component {
 
   // Attempt to solve current board.
   solve() {
+    // TODO: On win, congratulate.
     if (this.state.solved) {
       this.setState({ message: 'Already solved.', err: true });
       return;
@@ -93,7 +95,7 @@ class GameContainer extends Component {
         }
       }
     }
-    this.setState({ message: 'Valid so far!', err: false });
+    this.setState({ message: 'Correct so far!', err: false });
   }
 
   // Reset the board to unmodified state.
@@ -107,13 +109,17 @@ class GameContainer extends Component {
     });
   }
 
-  // Function called by a block to update global state.
+  // Function called by block to update global state.
   update(id, val) {
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;
     const valid = sudoku.validate(data);
     if (valid === true) {
+      if (sudoku.isFull(data)) {
+        console.log('you won?');
+      }
+
       this.setState({
         data,
         solved: false,
@@ -121,7 +127,13 @@ class GameContainer extends Component {
         err: false,
         flash: false,
       });
-    } else this.setState({ err: [valid[0], valid[1]], solved: false });
+    } else {
+      this.setState({
+        err: [valid[0], valid[1]],
+        solved: false,
+        message: '',
+      });
+    }
   }
 
   render() {
@@ -154,7 +166,6 @@ class GameContainer extends Component {
         }
     */
 
-    // TODO: Separate UI into its own component? Can pass down single func obj?
     return (
       <Fragment>
         <div className="GameContainer">

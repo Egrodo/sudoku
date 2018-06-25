@@ -1,0 +1,49 @@
+div.ui {
+  display: grid;
+  width: 20em;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas: "btn btn1" "btn2 btn3" "msg msg";
+  align-items: center;
+  margin: 1em auto;
+}
+
+div.ui button {
+  grid-area: btn;
+  background-color: #2a013a;
+  border: 2px solid #888888;
+  color: white;
+  cursor: pointer;
+  padding: .5em;
+  margin: .5em;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  outline: none;
+}
+
+div.ui button:hover {
+  animation-name: hover;
+  animation-duration: .2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes hover {
+  from { background-color: #2a013a }
+  to { background-color: #5a007e }
+}
+
+div.ui button:nth-of-type(2) { grid-area: btn1; }
+div.ui button:nth-of-type(3) { grid-area: btn2; }
+div.ui button:nth-of-type(4) { grid-area: btn3; }
+
+h4.message {
+  grid-area: msg;
+  height: 1em;
+  color: green;
+}
+
+h4.message.err {
+  color: red;
+}
