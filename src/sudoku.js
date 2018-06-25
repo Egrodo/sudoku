@@ -24,11 +24,15 @@ const shuffle = (arr) => {
 };
 
 // Remove random spots from a solved board given a difficulty.
-const removeSpots = (board, diff = 20) => {
+const removeSpots = (board, diff) => {
   for (let i = 0; i < diff; i++) {
-    const x = Math.floor((Math.random() * 9));
-    const y = Math.floor((Math.random() * 9));
-    // Bug or feature? x and y can sometimes conflict making the exact removal number inconsistent.
+    let x = Math.floor((Math.random() * 9));
+    let y = Math.floor((Math.random() * 9));
+    // If our randomly chosen spot is already blank, choose a new one.
+    while (board[x][y] === 0) {
+      x = Math.floor((Math.random() * 9));
+      y = Math.floor((Math.random() * 9));
+    }
     board[x][y] = 0;
   }
   return board;

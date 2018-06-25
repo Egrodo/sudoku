@@ -1,5 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import Row from './Row';
+import UserInterface from './UserInterface';
 import sudoku from '../sudoku';
 import '../css/GameContainer.css';
 
@@ -24,7 +25,7 @@ class GameContainer extends Component {
   }
 
   componentWillMount() {
-    const data = sudoku.removeSpots(sudoku.setup(), 50);
+    const data = sudoku.removeSpots(sudoku.setup(), 20);
     // Since we have a 2d array we need to deep copy by slicing the result of a map.
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
   }
@@ -62,11 +63,6 @@ class GameContainer extends Component {
 
   // Generate new game.
   newGame(e, diff) {
-    // Replace buttons with four difficulty choices
-    this.setState({ flash: true });
-    setTimeout(() => {
-      this.setState({ flash: false });
-    }, 1000);
     const data = sudoku.removeSpots(sudoku.setup(), diff);
     this.setState({
       data,
@@ -138,6 +134,13 @@ class GameContainer extends Component {
       diff,
     } = this.state;
 
+    const methods = {
+      newGame: this.newGame,
+      solve: this.solve,
+      reset: this.reset,
+      check: this.check,
+    };
+
     /*
       Ternary to sort errors into their respective blocks:
         if err is an array (if there are errors) {
@@ -174,24 +177,7 @@ class GameContainer extends Component {
             />
           ))}
         </div>
-
-        <div className="ui">
-          <button onClick={this.newGame}>
-            New Game
-          </button>
-          <button onClick={this.solve}>
-            Solve
-          </button>
-          <button onClick={this.reset}>
-            Reset
-          </button>
-          <button onClick={this.check}>
-            Check
-          </button>
-          <h4 className={`message ${err ? 'err' : ''}`}>
-            {message || ''}
-          </h4>
-        </div>
+        <UserInterface message={message} diff={diff} err={err} methods={methods} />
       </Fragment>
     );
   }
