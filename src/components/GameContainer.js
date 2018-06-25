@@ -1,11 +1,11 @@
 import React, { Fragment, Component } from 'react';
+import Cookies from 'js-cookie';
 import Row from './Row';
 import UserInterface from './UserInterface';
 import sudoku from '../sudoku';
 import '../css/GameContainer.css';
 
 class GameContainer extends Component {
-  // TODO: sessionStorage
   constructor() {
     super();
     this.state = {
@@ -26,9 +26,19 @@ class GameContainer extends Component {
   }
 
   componentWillMount() {
+    if (Cookies.get('board')) {
+      const prevData = Cookies.getJSON('board');
+      this.setState({
+        data: prevData,
+        originalData: prevData.map(v => v.slice(0)),
+        message: 'Restored board you were working on last time.',
+      });
+      return;
+    }
+
     const data = sudoku.removeSpots(sudoku.setup(), 20);
-    // Since we have a 2d array we need to deep copy by slicing the result of a map.
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
+    Cookies.set('board', data);
   }
 
   // Attempt to solve current board.
@@ -138,6 +148,9 @@ class GameContainer extends Component {
         err: false,
         flash: false,
       });
+      // If the user makes a valid move, assume
+      // they want to keep the board and save in cookies.
+      Cookies.set('board', data);
     } else {
       this.setState({
         err: [valid[0], valid[1]],
