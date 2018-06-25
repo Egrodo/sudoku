@@ -69,7 +69,7 @@ Row.propTypes = {
 Row.defaultProps = {
   data: [],
   name: null,
-  update: (() => { throw new Error('No update function.'); }),
+  update: (() => { throw new ReferenceError('No update function.'); }),
   flash: false,
   err: [false],
 };

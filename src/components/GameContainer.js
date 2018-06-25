@@ -13,6 +13,7 @@ class GameContainer extends Component {
       message: '',
       flash: false,
       err: false,
+      diff: false,
     };
 
     this.newGame = this.newGame.bind(this);
@@ -24,12 +25,7 @@ class GameContainer extends Component {
 
   componentWillMount() {
     const data = sudoku.removeSpots(sudoku.setup(), 50);
-    /*
-      For the unique copy, I realized we didn't need 2 for loops, only one
-      because the nums in the second array are immutable. Then once I had it
-      working with one for loop, and since I needed to turn the results of the
-      operation into a new array, map + slice.
-    */
+    // Since we have a 2d array we need to deep copy by slicing the result of a map.
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
   }
 
@@ -40,7 +36,7 @@ class GameContainer extends Component {
       return;
     }
 
-    // Validate existing data to ensure its solvable.
+    // First validate data to ensure its solvable.
     const valid = sudoku.validate(this.state.data);
     if (valid !== true) {
       this.setState({
@@ -50,9 +46,7 @@ class GameContainer extends Component {
     } else {
       const solved = sudoku.solve(this.state.data);
       if (!Array.isArray(solved)) {
-        // If I run check and handle errs there before getting here this will never hit.
-        alert('Array.isArray was actually hit!');
-        // This will be hit when puzzle is 'valid' but still not solvable (check).
+        // This will be hit when puzzle is 'valid' but still not solvable.
         this.setState({ message: 'Unsolvable', err: true });
       } else {
         this.setState({
@@ -68,7 +62,11 @@ class GameContainer extends Component {
 
   // Generate new game.
   newGame(e, diff) {
-    // TODO: Choose difficulty
+    // Replace buttons with four difficulty choices
+    this.setState({ flash: true });
+    setTimeout(() => {
+      this.setState({ flash: false });
+    }, 1000);
     const data = sudoku.removeSpots(sudoku.setup(), diff);
     this.setState({
       data,
@@ -86,15 +84,14 @@ class GameContainer extends Component {
       this.setState({ message: `Conflict with ${this.state.err[0]} and ${this.state.err[1]}.` });
       return;
     }
-    // Solve originalData and compare it to data, ignoring zeros.
+    if (this.state.solved) return;
     const data = this.state.data.map(v => v.slice(0));
     const solved = sudoku.solve(this.state.originalData.map(v => v.slice(0)));
 
     for (let i = 0; i < 9; ++i) {
       for (let n = 0; n < 9; ++n) {
-        if (data[i][n] === 0) {
-          continue;
-        } else if (data[i][n] !== solved[i][n]) {
+        if (data[i][n] === 0) continue;
+        if (data[i][n] !== solved[i][n]) {
           this.setState({ message: `[${i}, ${n}] isn't correct`, err: [[i, n], [null, null]] });
           return;
         }
@@ -138,6 +135,7 @@ class GameContainer extends Component {
       err,
       data,
       flash,
+      diff,
     } = this.state;
 
     /*
@@ -153,8 +151,7 @@ class GameContainer extends Component {
         }
     */
 
-    // TODO: Sort flashed.
-
+    // TODO: Separate UI into its own component? Can pass down single func obj?
     return (
       <Fragment>
         <div className="GameContainer">
@@ -186,10 +183,10 @@ class GameContainer extends Component {
             Solve
           </button>
           <button onClick={this.reset}>
-            Reset Game
+            Reset
           </button>
           <button onClick={this.check}>
-            ! Check
+            Check
           </button>
           <h4 className={`message ${err ? 'err' : ''}`}>
             {message || ''}

@@ -100,7 +100,7 @@ Block.propTypes = {
 Block.defaultProps = {
   val: 0,
   name: 'NONE',
-  update: (() => { throw new Error('No update func passed to block'); }),
+  update: (() => { throw new ReferenceError('No update func passed to block'); }),
   flash: false,
   err: false,
 };
