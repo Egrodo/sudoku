@@ -24,18 +24,15 @@ class UserInterface extends Component {
     if (!this.state.diff) clearTimeout(this.timer);
   }
 
+  // Toggle to difficulty selection so long as we're not already there.
   diffToggle() {
-    if (!this.state.diff) {
-      this.setState({ diff: true });
-      this.timer = setTimeout(() => { this.setState({ diff: false }); }, 3000);
-    } else {
-      alert("Shouldn't get here, diffToggle.");
-    }
+    if (this.state.diff) return;
+    this.setState({ diff: true });
+    this.timer = setTimeout(() => { this.setState({ diff: false }); }, 3000);
   }
 
   render() {
     // TODO: Better way of doing conditional return?
-    // TODO: CSS timer
     const { methods } = this.props;
     if (this.state.diff) {
       return (

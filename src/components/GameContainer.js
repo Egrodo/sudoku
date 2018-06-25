@@ -33,7 +33,6 @@ class GameContainer extends Component {
 
   // Attempt to solve current board.
   solve() {
-    // TODO: On win, congratulate.
     if (this.state.solved) {
       this.setState({ message: 'Already solved.', err: true });
       return;
@@ -49,8 +48,12 @@ class GameContainer extends Component {
     } else {
       const solved = sudoku.solve(this.state.data);
       if (!Array.isArray(solved)) {
-        // This will be hit when puzzle is 'valid' but still not solvable.
-        this.setState({ message: 'Unsolvable', err: true });
+        if (solved === true) {
+          this.setState({ solved: true });
+        } else {
+          // This will be hit when puzzle is 'valid' but still not solvable.
+          this.setState({ message: 'Unsolvable', err: true });
+        }
       } else {
         this.setState({
           data: solved,
@@ -90,23 +93,31 @@ class GameContainer extends Component {
     const data = this.state.data.map(v => v.slice(0));
     const solved = sudoku.solve(this.state.originalData.map(v => v.slice(0)));
 
+    let flag = true;
     for (let i = 0; i < 9; ++i) {
       for (let n = 0; n < 9; ++n) {
-        if (data[i][n] === 0) continue;
+        if (data[i][n] === 0) {
+          // If we find a zero, the puzzle isn't fully solved yet but continue checking.
+          flag = false;
+          continue;
+        }
         if (data[i][n] !== solved[i][n]) {
           this.setState({ message: `[${i}, ${n}] isn't correct`, err: [[i, n], [null, null]] });
           return;
         }
       }
     }
-    this.setState({ message: 'Correct so far!', err: false });
+    if (flag) {
+      // TODO: Win animaton?
+      this.setState({ message: 'Congratulations, you won! Play again?', err: false });
+    } else this.setState({ message: 'Correct so far!', err: false });
   }
 
   // Reset the board to unmodified state.
   reset() {
-    const data = this.state.originalData;
+    const data = this.state.originalData.map(v => v.slice(0));
     this.setState({
-      data: data.map(v => v.slice(0)),
+      data,
       solved: false,
       err: false,
       message: 'Reset',
