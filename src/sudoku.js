@@ -25,6 +25,8 @@ const shuffle = (arr) => {
 
 // Remove random spots from a solved board given a difficulty.
 const removeSpots = (board, diff) => {
+  // BUG: Sometimes we hit unsolvable games on impossible diff (17 left),
+  // causes infinite loop and crashes browser.
   for (let i = 0; i < diff; i++) {
     let x = Math.floor((Math.random() * 9));
     let y = Math.floor((Math.random() * 9));
@@ -82,7 +84,7 @@ const validate = (board) => {
 
 // Create array of possibilities for any given point.
 const possibilities = (board, i, j) => {
-  if (i > 8 || i < 0 || j > 8 || j < 0) throw new Error('Invalid coords.');
+  if (i > 8 || i < 0 || j > 8 || j < 0) throw new RangeError('Invalid coords.');
   if (board[i][j] !== 0) throw new Error('This spot is taken.');
 
   /* eslint-disable-next-line */

@@ -28,10 +28,11 @@ class GameContainer extends Component {
   componentWillMount() {
     if (Cookies.get('board')) {
       const prevData = Cookies.getJSON('board');
+      const origData = Cookies.getJSON('origBoard');
       this.setState({
         data: prevData,
-        originalData: prevData.map(v => v.slice(0)),
-        message: 'Restored board you were working on last time.',
+        originalData: origData,
+        message: 'Restored a board you were working on previously.',
       });
       return;
     }
@@ -39,6 +40,7 @@ class GameContainer extends Component {
     const data = sudoku.removeSpots(sudoku.setup(), 20);
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
     Cookies.set('board', data);
+    Cookies.set('origBoard', data);
   }
 
   // Attempt to solve current board.
@@ -87,6 +89,8 @@ class GameContainer extends Component {
       message: '',
       err: false,
     });
+    Cookies.set('board', data);
+    Cookies.set('origBoard', data);
   }
 
   // Check current game against correct solution.
@@ -104,21 +108,23 @@ class GameContainer extends Component {
     const solved = sudoku.solve(this.state.originalData.map(v => v.slice(0)));
 
     let flag = true;
-    for (let i = 0; i < 9; ++i) {
-      for (let n = 0; n < 9; ++n) {
-        if (data[i][n] === 0) {
-          // If we find a zero, the puzzle isn't fully solved yet but continue checking.
-          flag = false;
-          continue;
-        }
-        if (data[i][n] !== solved[i][n]) {
-          this.setState({ message: `[${i}, ${n}] isn't correct`, err: [[i, n], [null, null]] });
-          return;
+    if (solved !== true) {
+      for (let i = 0; i < 9; ++i) {
+        for (let n = 0; n < 9; ++n) {
+          if (data[i][n] === 0) {
+            // If we find a zero, the puzzle isn't fully solved yet but continue anyways.
+            flag = false;
+            continue;
+          }
+          if (data[i][n] !== solved[i][n]) {
+            this.setState({ message: `[${i}, ${n}] isn't correct`, err: [[i, n], [null, null]] });
+            return;
+          }
         }
       }
     }
+
     if (flag) {
-      // TODO: Win animaton?
       this.setState({ message: 'Congratulations, you won! Play again?', err: false });
     } else this.setState({ message: 'Correct so far!', err: false });
   }
@@ -132,10 +138,14 @@ class GameContainer extends Component {
       err: false,
       message: 'Reset',
     });
+
+    Cookies.set('board', data);
   }
 
   // Function called by block to update global state.
   update(id, val) {
+    // TODO: Display all errors somehow?
+    // Currently the top-most error is the only one being shown.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;
     data[row][col] = val;

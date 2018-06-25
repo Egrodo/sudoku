@@ -6,9 +6,12 @@ class UserInterface extends Component {
   constructor() {
     super();
 
-    this.state = { diff: false };
-    this.timer = null;
+    this.state = { diff: false, reset: false };
+    this.diffTimer = null;
+    this.resetTimer = null;
+
     this.diffToggle = this.diffToggle.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   componentWillMount() {
@@ -20,33 +23,43 @@ class UserInterface extends Component {
   }
 
   componentDidUpdate() {
-    // If someone clicks newGame again less than 3 seconds after just chosing one, clear timer.
-    if (!this.state.diff) clearTimeout(this.timer);
+    // If someone clicks the button again less than 3 seconds after a clear is needed.
+    if (!this.state.diff) clearTimeout(this.diffTimer);
+    if (!this.state.reset) clearTimeout(this.resetTimer);
   }
 
   // Toggle to difficulty selection so long as we're not already there.
   diffToggle() {
     if (this.state.diff) return;
     this.setState({ diff: true });
-    this.timer = setTimeout(() => { this.setState({ diff: false }); }, 3000);
+    this.diffTimer = setTimeout(() => { this.setState({ diff: false }); }, 3000);
+  }
+
+  reset() {
+    if (this.state.reset) {
+      this.setState({ reset: false });
+      this.props.methods.reset();
+    } else {
+      this.setState({ reset: true });
+      this.resetTimer = setTimeout(() => { this.setState({ reset: false }); }, 3000);
+    }
   }
 
   render() {
-    // TODO: Better way of doing conditional return?
     const { methods } = this.props;
     if (this.state.diff) {
       return (
         <div className="ui">
-          <button onClick={() => methods.newGame(null, 20)} className="timer">
+          <button onClick={() => methods.newGame(null, 20)} >
             Easy
           </button>
-          <button onClick={() => methods.newGame(null, 40)} className="timer">
+          <button onClick={() => methods.newGame(null, 40)}>
             Medium
           </button>
-          <button onClick={() => methods.newGame(null, 50)} className="timer">
+          <button onClick={() => methods.newGame(null, 50)} >
             Hard
           </button>
-          <button onClick={() => methods.newGame(null, 64)} className="timer">
+          <button onClick={() => methods.newGame(null, 64)} >
             Impossible
           </button>
           <h4 className={`message ${this.props.err ? 'err' : ''}`}>
@@ -64,8 +77,8 @@ class UserInterface extends Component {
         <button onClick={methods.submit}>
           Submit
         </button>
-        <button onClick={methods.reset}>
-          Reset
+        <button onClick={this.reset}>
+          {this.state.reset ? 'Are you sure?' : 'Reset'}
         </button>
         <button onClick={methods.solve}>
           Solve
