@@ -10,6 +10,30 @@ const isFull = (board) => {
   return true;
 };
 
+// Randomly shuffle an array.
+const shuffle = (arr) => {
+  let j = 0;
+  let temp;
+  for (let i = arr.length - 1; i > 0; --i) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
+};
+
+// Remove random spots from a solved board given a difficulty.
+const removeSpots = (board, diff = 20) => {
+  for (let i = 0; i < diff; i++) {
+    const x = Math.floor((Math.random() * 9));
+    const y = Math.floor((Math.random() * 9));
+    // Bug or feature? x and y can sometimes conflict making the exact removal number inconsistent.
+    board[x][y] = 0;
+  }
+  return board;
+};
+
 // Validate that a passed board is valid across row, col, block.
 const validate = (board) => {
   // Accepts a full or unfinished board and returns
@@ -126,34 +150,11 @@ const solve = (board) => {
   }
 };
 
-// Remove random spots from a solved board given a difficulty.
-const removeSpots = (board, diff = 20) => {
-  for (let i = 0; i < diff; i++) {
-    const x = Math.floor((Math.random() * 9));
-    const y = Math.floor((Math.random() * 9));
-    // Bug or feature? x and y can sometimes conflict making the exact removal number inconsistent.
-    board[x][y] = 0;
-  }
-  return board;
-};
-
-// Randomly shuffle an array.
-const shuffle = (arr) => {
-  let j = 0;
-  let temp;
-  for (let i = arr.length - 1; i > 0; --i) {
-    j = Math.floor(Math.random() * (i + 1));
-    temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-  }
-  return arr;
-};
-
 // Initliaze a random seed board to solve.
 const setup = () => {
   const row = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   let col = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // Remove the first row item from the col.
   col.splice((row[0] - 1), 1);
   col = shuffle(col);
 

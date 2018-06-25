@@ -11,7 +11,8 @@ class GameContainer extends Component {
       originalData: [],
       solved: false,
       message: '',
-      err: true,
+      flash: false,
+      err: false,
     };
 
     this.newGame = this.newGame.bind(this);
@@ -27,15 +28,13 @@ class GameContainer extends Component {
       For the unique copy, I realized we didn't need 2 for loops, only one
       because the nums in the second array are immutable. Then once I had it
       working with one for loop, and since I needed to turn the results of the
-      operation into a new array, map + slice was obvious.
+      operation into a new array, map + slice.
     */
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
   }
 
   // Attempt to solve current board.
   solve() {
-    // TODO: Keep the block flashing on solve and reset.
-    // Check if already solved before modifing.
     if (this.state.solved) {
       this.setState({ message: 'Already solved.', err: true });
       return;
@@ -46,19 +45,21 @@ class GameContainer extends Component {
     if (valid !== true) {
       this.setState({
         message: `Conflict with ${valid[0]} and ${valid[1]}.`,
-        err: [valid[0], valid[1]],
+        err: valid,
       });
-      // ^ Store err coords for visualizer.
     } else {
       const solved = sudoku.solve(this.state.data);
       if (!Array.isArray(solved)) {
-        // Will this ever be hit? Validator should cover unsolvable puzzles.
+        // If I run check and handle errs there before getting here this will never hit.
+        alert('Array.isArray was actually hit!');
+        // This will be hit when puzzle is 'valid' but still not solvable (check).
         this.setState({ message: 'Unsolvable', err: true });
       } else {
         this.setState({
           data: solved,
           solved: true,
           message: 'Solved',
+          flash: true,
           err: false,
         });
       }
@@ -73,6 +74,7 @@ class GameContainer extends Component {
       data,
       originalData: data.map(v => v.slice(0)),
       solved: false,
+      flash: false,
       message: '',
       err: false,
     });
@@ -80,7 +82,25 @@ class GameContainer extends Component {
 
   // Check current game against correct solution.
   check() {
-    // Loop through data and check if that same spot in originalData is the same value.
+    if (this.state.err) {
+      this.setState({ message: `Conflict with ${this.state.err[0]} and ${this.state.err[1]}.` });
+      return;
+    }
+    // Solve originalData and compare it to data, ignoring zeros.
+    const data = this.state.data.map(v => v.slice(0));
+    const solved = sudoku.solve(this.state.originalData.map(v => v.slice(0)));
+
+    for (let i = 0; i < 9; ++i) {
+      for (let n = 0; n < 9; ++n) {
+        if (data[i][n] === 0) {
+          continue;
+        } else if (data[i][n] !== solved[i][n]) {
+          this.setState({ message: `[${i}, ${n}] isn't correct`, err: [[i, n], [null, null]] });
+          return;
+        }
+      }
+    }
+    this.setState({ message: 'Valid so far!', err: false });
   }
 
   // Reset the board to unmodified state.
@@ -101,17 +121,23 @@ class GameContainer extends Component {
     data[row][col] = val;
     const valid = sudoku.validate(data);
     if (valid === true) {
-      this.setState({ data, solved: false, err: false });
-    } else this.setState({ err: [valid[0], valid[1]] });
+      this.setState({
+        data,
+        solved: false,
+        message: '',
+        err: false,
+        flash: false,
+      });
+    } else this.setState({ err: [valid[0], valid[1]], solved: false });
   }
 
   render() {
     // TODO: Fix prop drilling with context api.
     const {
-      solved,
       message,
       err,
       data,
+      flash,
     } = this.state;
 
     /*
@@ -127,6 +153,8 @@ class GameContainer extends Component {
         }
     */
 
+    // TODO: Sort flashed.
+
     return (
       <Fragment>
         <div className="GameContainer">
@@ -136,7 +164,7 @@ class GameContainer extends Component {
               name={i.toString()}
               key={i}
               update={this.update}
-              solved={solved}
+              flash={flash}
               err={
                 Array.isArray(err) ? (
                   err[0][0] === i && err[1][0] === i ? err : (

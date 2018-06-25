@@ -24,7 +24,7 @@ class Row extends Component {
       name,
       err,
       update,
-      solved,
+      flash,
     } = this.props;
 
     /*
@@ -44,13 +44,13 @@ class Row extends Component {
             val={val}
             name={`${name}-${i}`}
             key={`${name}-${i}`}
+            flash={flash}
             err={
               err ? err[0].constructor === Array ? (
                 err[0][1] === i || err[1][1] === i
               ) : (err[1] === i) : false
             }
             update={update}
-            solved={solved}
           />
         ))}
       </div>
@@ -62,8 +62,7 @@ Row.propTypes = {
   data: PropTypes.arrayOf(PropTypes.number),
   name: PropTypes.string,
   update: PropTypes.func,
-  solved: PropTypes.bool,
-  /* eslint-disable-next-line */
+  flash: PropTypes.bool,
   err: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
 };
 
@@ -71,7 +70,7 @@ Row.defaultProps = {
   data: [],
   name: null,
   update: (() => { throw new Error('No update function.'); }),
-  solved: false,
+  flash: false,
   err: [false],
 };
 

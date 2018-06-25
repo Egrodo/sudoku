@@ -7,25 +7,29 @@ class Block extends Component {
     super();
     this.state = {
       val: '',
+      solid: false,
       flash: false,
     };
 
+    this.flash = this.flash.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
   componentWillMount() {
-    this.setState({ val: this.props.val, change: this.props.err });
+    this.setState({ val: this.props.val });
   }
 
   componentWillReceiveProps(nextProps) {
+    // BUG: The flash messes up sometimes due to settimeout.
     if (nextProps.val !== this.state.val) {
       this.setState({ val: nextProps.val });
+      if (nextProps.flash) this.flash();
     }
+
     if (nextProps.err) {
-      this.setState({ flash: true });
-    } else this.setState({ flash: false });
-    // TODO: Maintain solved flashing.
+      this.setState({ solid: true });
+    } else this.setState({ solid: false });
   }
 
   onChange(e) {
@@ -50,11 +54,23 @@ class Block extends Component {
     e.target.blur();
   }
 
+  flash() {
+    this.setState({ flash: true });
+    setTimeout(() => {
+      this.setState({ flash: false });
+    }, 1000);
+  }
+
   render() {
-    const { flash, val, disabled } = this.state;
+    const {
+      val,
+      solid,
+      flash,
+    } = this.state;
+
     return (
       <div
-        className={`Block ${flash ? 'flash' : ''}`}
+        className={`Block ${flash ? 'flash' : ''}${solid ? 'solid' : ''}`}
         id={this.props.name}
         onClick={this.onClick}
         role="presentation"
@@ -65,7 +81,6 @@ class Block extends Component {
             onChange={this.onChange}
             onBlur={this.onBlur}
             type="tel"
-            disabled={disabled}
             maxLength="1"
           />
         </form>
@@ -78,7 +93,7 @@ Block.propTypes = {
   val: PropTypes.number,
   name: PropTypes.string,
   update: PropTypes.func,
-  solved: PropTypes.bool,
+  flash: PropTypes.bool,
   err: PropTypes.bool,
 };
 
@@ -86,7 +101,7 @@ Block.defaultProps = {
   val: 0,
   name: 'NONE',
   update: (() => { throw new Error('No update func passed to block'); }),
-  solved: false,
+  flash: false,
   err: false,
 };
 
