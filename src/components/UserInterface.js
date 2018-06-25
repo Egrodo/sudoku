@@ -64,14 +64,14 @@ class UserInterface extends Component {
         <button onClick={this.diffToggle}>
           New Game
         </button>
-        <button onClick={methods.solve}>
-          Solve
+        <button onClick={methods.submit}>
+          Submit
         </button>
         <button onClick={methods.reset}>
           Reset
         </button>
-        <button onClick={methods.check}>
-          Check
+        <button onClick={methods.solve}>
+          Solve
         </button>
         <h4 className={`message ${this.props.err ? 'err' : ''}`}>
           {this.props.message || ''}

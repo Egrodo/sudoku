@@ -20,7 +20,7 @@ class GameContainer extends Component {
 
     this.newGame = this.newGame.bind(this);
     this.update = this.update.bind(this);
-    this.check = this.check.bind(this);
+    this.submit = this.submit.bind(this);
     this.solve = this.solve.bind(this);
     this.reset = this.reset.bind(this);
   }
@@ -77,12 +77,16 @@ class GameContainer extends Component {
   }
 
   // Check current game against correct solution.
-  check() {
+  submit() {
     if (this.state.err) {
+      if (this.state.err === true) return;
       this.setState({ message: `Conflict with ${this.state.err[0]} and ${this.state.err[1]}.` });
       return;
     }
-    if (this.state.solved) return;
+    if (this.state.solved) {
+      this.setState({ message: 'Already solved.' });
+      return;
+    }
     const data = this.state.data.map(v => v.slice(0));
     const solved = sudoku.solve(this.state.originalData.map(v => v.slice(0)));
 
@@ -116,10 +120,6 @@ class GameContainer extends Component {
     data[row][col] = val;
     const valid = sudoku.validate(data);
     if (valid === true) {
-      if (sudoku.isFull(data)) {
-        console.log('you won?');
-      }
-
       this.setState({
         data,
         solved: false,
@@ -150,7 +150,7 @@ class GameContainer extends Component {
       newGame: this.newGame,
       solve: this.solve,
       reset: this.reset,
-      check: this.check,
+      submit: this.submit,
     };
 
     /*
