@@ -41,7 +41,7 @@ div.ui button:nth-of-type(4) { grid-area: btn3; }
 h4.message {
   grid-area: msg;
   height: 1em;
-  color: green;
+  color: #00d700;
 }
 
 h4.message.err {

@@ -1,6 +1,6 @@
 {
     "name": "Sudoku Anywhere",
-    "short_name": "Sudoku Anywhere",
+    "short_name": "Sudoku",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

@@ -39,7 +39,6 @@ class GameContainer extends Component {
 
     const data = sudoku.removeSpots(sudoku.setup(), 20);
     this.setState({ data, originalData: data.map(v => v.slice(0)) });
-    Cookies.set('board', data);
     Cookies.set('origBoard', data);
   }
 
@@ -89,7 +88,6 @@ class GameContainer extends Component {
       message: '',
       err: false,
     });
-    Cookies.set('board', data);
     Cookies.set('origBoard', data);
   }
 
