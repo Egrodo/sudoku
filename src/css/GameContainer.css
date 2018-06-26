@@ -18,23 +18,16 @@ div.GameContainer {
 
 @media only screen and (min-width: 750px) {
   div.GameContainer {
-    width: 45vw;
-    height: 45vw;
+    width: 40vw;
+    height: 40vw;
     font-size: 1.2em;
-  }
-}
-
-@media only screen and (min-width: 1300px) {
-  div.GameContainer {
-    width: 45vw;
-    height: 45vw;
   }
 }
 
 @media only screen and (min-width: 1500px) {
   div.GameContainer {
-    height: 35vw;
-    width: 35vw;
+    height: 30vw;
+    width: 30vw;
     font-size: 1.5em;
   }
 }
@@ -47,7 +40,7 @@ div.GameContainer {
   }
 }
 
-@media only screen and (max-height: 640px) {
+@media only screen and (max-height: 750px) {
   div.GameContainer {
     height: 21em;
   }

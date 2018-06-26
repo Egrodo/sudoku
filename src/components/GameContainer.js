@@ -142,7 +142,6 @@ class GameContainer extends Component {
 
   // Function called by block to update global state.
   update(id, val) {
-    // TODO: Display all errors somehow?
     // Currently the top-most error is the only one being shown.
     const [row, col] = id.split('-'); // Retrieve indexes
     const { data } = this.state;

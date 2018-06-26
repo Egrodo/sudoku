@@ -59,7 +59,7 @@ class UserInterface extends Component {
           <button onClick={() => methods.newGame(null, 50)} >
             Hard
           </button>
-          <button onClick={() => methods.newGame(null, 64)} >
+          <button onClick={() => methods.newGame(null, 63)} >
             Impossible
           </button>
           <h4 className={`message ${this.props.err ? 'err' : ''}`}>

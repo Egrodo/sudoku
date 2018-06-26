@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+// Sudoku Module - Noah Yamamoto 2018
 
 // Check if a passed board is full for base-case.
 const isFull = (board) => {
@@ -25,8 +25,9 @@ const shuffle = (arr) => {
 
 // Remove random spots from a solved board given a difficulty.
 const removeSpots = (board, diff) => {
-  // BUG: Sometimes we hit unsolvable games on impossible diff (17 left),
-  // causes infinite loop and crashes browser.
+  // BUG: Sometimes impossible games aren't solvable
+  // causing infinite loop and crashing the browser.
+  // If a malformed puzzle is generated, solving or submitting will crash you.
   for (let i = 0; i < diff; i++) {
     let x = Math.floor((Math.random() * 9));
     let y = Math.floor((Math.random() * 9));
@@ -90,11 +91,11 @@ const possibilities = (board, i, j) => {
   /* eslint-disable-next-line */
   const pos = [...Array.from(Array(9).keys())].map(v => 0);
   for (let x = 0; x < 9; ++x) { // Loop thru the row (i) horizontally.
-    if (board[i][x] !== 0) ++pos[board[i][x] - 1];
+    if (board[i][x] !== 0)++pos[board[i][x] - 1];
   }
 
   for (let y = 0; y < 9; ++y) { // Loop thru column (j) vertically.
-    if (board[y][j] !== 0) ++pos[board[y][j] - 1];
+    if (board[y][j] !== 0)++pos[board[y][j] - 1];
   }
 
 
@@ -123,6 +124,7 @@ const possibilities = (board, i, j) => {
   return ans;
 };
 
+/* eslint-disable consistent-return */
 // Solve a not fully formed board.
 const solve = (board) => {
   // Base case for recurse, check if board is full.
@@ -156,6 +158,7 @@ const solve = (board) => {
     board[i][j] = 0;
   }
 };
+/* eslint-enable consistent-return */
 
 // Initliaze a random seed board to solve.
 const setup = () => {

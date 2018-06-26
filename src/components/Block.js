@@ -21,8 +21,6 @@ class Block extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // BUG: The flash messes up sometimes due to settimeout.
-    // If click solve then change num before animation is over.
     if (nextProps.val !== this.state.val) {
       this.setState({ val: nextProps.val });
       if (nextProps.flash) this.flash();
