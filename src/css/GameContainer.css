@@ -49,6 +49,6 @@ div.GameContainer {
 
 @media only screen and (max-height: 640px) {
   div.GameContainer {
-    height: 30em;
+    height: 21em;
   }
 }

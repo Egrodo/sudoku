@@ -90,12 +90,13 @@ const possibilities = (board, i, j) => {
   /* eslint-disable-next-line */
   const pos = [...Array.from(Array(9).keys())].map(v => 0);
   for (let x = 0; x < 9; ++x) { // Loop thru the row (i) horizontally.
-    if (board[i][x] !== 0)++pos[board[i][x] - 1];
+    if (board[i][x] !== 0) ++pos[board[i][x] - 1];
   }
 
   for (let y = 0; y < 9; ++y) { // Loop thru column (j) vertically.
-    if (board[y][j] !== 0)++pos[board[y][j] - 1];
+    if (board[y][j] !== 0) ++pos[board[y][j] - 1];
   }
+
 
   // Check block
   // First, find midpoint of whatever block we're in.
