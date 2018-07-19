@@ -34,12 +34,11 @@ class GameContainer extends Component {
         originalData: origData,
         message: 'Restored a board you were working on previously.',
       });
-      return;
+    } else {
+      const data = sudoku.removeSpots(sudoku.setup(), 20);
+      this.setState({ data, originalData: data.map(v => v.slice(0)) });
+      Cookies.set('origBoard', data);
     }
-
-    const data = sudoku.removeSpots(sudoku.setup(), 20);
-    this.setState({ data, originalData: data.map(v => v.slice(0)) });
-    Cookies.set('origBoard', data);
   }
 
   // Attempt to solve current board.
