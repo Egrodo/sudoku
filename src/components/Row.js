@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Block from './Block';
 import '../css/Row.css';
 
+// TODO: Row cannot be PureComponent. Why not?
+
 class Row extends Component {
   constructor() {
     super();

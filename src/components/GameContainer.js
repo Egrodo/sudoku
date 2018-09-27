@@ -1,11 +1,11 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import Cookies from 'js-cookie';
 import Row from './Row';
 import UserInterface from './UserInterface';
 import sudoku from '../sudoku';
 import '../css/GameContainer.css';
 
-class GameContainer extends Component {
+class GameContainer extends PureComponent {
   constructor() {
     super();
     this.state = {

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import '../css/Block.css';
 
-class Block extends Component {
+class Block extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -18,6 +18,7 @@ class Block extends Component {
 
   componentWillMount() {
     this.setState({ val: this.props.val });
+    // TODO: Detect wether the browser supports input type tel?
   }
 
   componentWillReceiveProps(nextProps) {

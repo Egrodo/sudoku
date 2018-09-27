@@ -1,21 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import '../css/UserInterface.css';
 
-class UserInterface extends Component {
-  constructor() {
-    super();
+class UserInterface extends PureComponent {
+  constructor(props) {
+    super(props);
 
-    this.state = { diff: false, reset: false };
+    this.state = { diff: props.diff || false, reset: false };
     this.diffTimer = null;
     this.resetTimer = null;
 
     this.diffToggle = this.diffToggle.bind(this);
     this.reset = this.reset.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState({ diff: this.props.diff });
   }
 
   componentWillReceiveProps(nextProps) {
