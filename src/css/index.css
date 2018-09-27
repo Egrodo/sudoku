@@ -3,4 +3,7 @@ body {
   color: white;
   font-family: 'Patua One', Arial;
   letter-spacing: .1em;
+
+  /* Experimental fix to keyboard changing element sizes */
+  min-height: 500px;
 }
