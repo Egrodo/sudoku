@@ -28,15 +28,16 @@ const removeSpots = (board, diff) => {
   // BUG: Sometimes impossible games aren't solvable
   // causing infinite loop and crashing the browser.
   // If a malformed puzzle is generated, solving or submitting will crash you.
-  for (let i = 0; i < diff; i++) {
-    let x = Math.floor((Math.random() * 9));
-    let y = Math.floor((Math.random() * 9));
-    // If our randomly chosen spot is already blank, choose a new one.
-    while (board[x][y] === 0) {
-      x = Math.floor((Math.random() * 9));
-      y = Math.floor((Math.random() * 9));
+
+  const removed = new Set();
+  while (removed.size < diff) {
+    const x = Math.floor((Math.random() * 9));
+    const y = Math.floor((Math.random() * 9));
+    // If our randomly chosen spot was already removed, choose a new one.
+    if (!removed.has(`${x}${y}`)) {
+      removed.add(`${x}${y}`);
+      board[x][y] = 0;
     }
-    board[x][y] = 0;
   }
   return board;
 };
@@ -47,6 +48,7 @@ const validate = (board) => {
   // either true (indicating valid) or an array of
   // the offenders.
 
+  // TODO: Optimize this.
   for (let i = 0; i < 9; ++i) { // Loop down the rows
     for (let j = 0; j < 9; ++j) { // Loop across the columns
       // Validate even if the board isn't full.

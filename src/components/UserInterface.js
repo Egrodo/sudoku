@@ -14,8 +14,8 @@ class UserInterface extends PureComponent {
     this.reset = this.reset.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ diff: nextProps.diff });
+  componentWillReceiveProps({ diff }) {
+    this.setState({ diff });
   }
 
   componentDidUpdate() {
@@ -34,7 +34,7 @@ class UserInterface extends PureComponent {
   reset() {
     if (this.state.reset) {
       this.setState({ reset: false });
-      this.props.methods.reset();
+      this.props.UIMethods.reset();
     } else {
       this.setState({ reset: true });
       this.resetTimer = setTimeout(() => { this.setState({ reset: false }); }, 3000);
@@ -42,24 +42,25 @@ class UserInterface extends PureComponent {
   }
 
   render() {
-    const { methods } = this.props;
-    if (this.state.diff) {
+    const { UIMethods, message, err } = this.props;
+    const { diff, reset } = this.state;
+    if (diff) {
       return (
         <div className="ui">
-          <button onClick={() => methods.newGame(null, 20)} >
+          <button onClick={() => UIMethods.newGame(null, 20)} >
             Easy
           </button>
-          <button onClick={() => methods.newGame(null, 40)}>
+          <button onClick={() => UIMethods.newGame(null, 40)}>
             Medium
           </button>
-          <button onClick={() => methods.newGame(null, 50)} >
+          <button onClick={() => UIMethods.newGame(null, 50)} >
             Hard
           </button>
-          <button onClick={() => methods.newGame(null, 63)} >
+          <button onClick={() => UIMethods.newGame(null, 63)} >
             Impossible
           </button>
-          <h4 className={`message ${this.props.err ? 'err' : ''}`}>
-            {this.props.message || ''}
+          <h4 className={`message ${err ? 'err' : ''}`}>
+            {message || ''}
           </h4>
         </div>
       );
@@ -70,17 +71,17 @@ class UserInterface extends PureComponent {
         <button onClick={this.diffToggle}>
           New Game
         </button>
-        <button onClick={methods.submit}>
+        <button onClick={UIMethods.submit}>
           Submit
         </button>
         <button onClick={this.reset}>
-          {this.state.reset ? 'Are you sure?' : 'Reset'}
+          {reset ? 'Are you sure?' : 'Reset'}
         </button>
-        <button onClick={methods.solve}>
+        <button onClick={UIMethods.solve}>
           Solve
         </button>
-        <h4 className={`message ${this.props.err ? 'err' : ''}`}>
-          {this.props.message || ''}
+        <h4 className={`message ${err ? 'err' : ''}`}>
+          {message || ''}
         </h4>
       </div>
     );
@@ -91,14 +92,14 @@ UserInterface.propTypes = {
   message: PropTypes.string,
   diff: PropTypes.bool,
   err: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
-  methods: PropTypes.objectOf(PropTypes.func),
+  UIMethods: PropTypes.objectOf(PropTypes.func),
 };
 
 UserInterface.defaultProps = {
   message: '',
   diff: false,
   err: false,
-  methods: (() => { throw new ReferenceError('Method obj not passed to UI.'); }),
+  UIMethods: (() => { throw new ReferenceError('Method obj not passed to UI.'); }),
 };
 
 export default UserInterface;

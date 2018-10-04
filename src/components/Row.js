@@ -3,18 +3,12 @@ import PropTypes from 'prop-types';
 import Block from './Block';
 import '../css/Row.css';
 
-// TODO: Row cannot be PureComponent. Why not?
-
 class Row extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      nums: [],
+      nums: props.data || [],
     };
-  }
-
-  componentWillMount() {
-    this.setState({ nums: this.props.data });
   }
 
   componentWillReceiveProps(nextProps) {

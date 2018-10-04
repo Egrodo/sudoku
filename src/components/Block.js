@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import '../css/Block.css';
 
 class Block extends PureComponent {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      val: '',
+      val: props.val || '',
       solid: false,
       flash: false,
     };
@@ -16,24 +16,19 @@ class Block extends PureComponent {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillMount() {
-    this.setState({ val: this.props.val });
-    // TODO: Detect wether the browser supports input type tel?
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.val !== this.state.val) {
-      this.setState({ val: nextProps.val });
-      if (nextProps.flash) this.flash();
+  componentWillReceiveProps({ val, flash, err }) {
+    if (val !== this.state.val) {
+      this.setState({ val });
+      if (flash) this.flash();
     }
 
-    if (nextProps.err) {
+    if (err) {
       this.setState({ solid: true });
     } else this.setState({ solid: false });
   }
 
   onChange(e) {
-    let val = String(e.target.value);
+    let val = e.target.value.toString();
     // Handle input parsing. Convert to ints, blanks handled as zeros in code.
     if (val.length > 1) return;
     if (val === '' || val === ' ') val = 0;
@@ -56,9 +51,7 @@ class Block extends PureComponent {
 
   flash() {
     this.setState({ flash: true });
-    setTimeout(() => {
-      this.setState({ flash: false });
-    }, 1000);
+    setTimeout(() => { this.setState({ flash: false }); }, 1000);
   }
 
   render() {

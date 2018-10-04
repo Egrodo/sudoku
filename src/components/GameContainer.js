@@ -1,11 +1,11 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, Component } from 'react';
 import Cookies from 'js-cookie';
 import Row from './Row';
 import UserInterface from './UserInterface';
 import sudoku from '../sudoku';
 import '../css/GameContainer.css';
 
-class GameContainer extends PureComponent {
+class GameContainer extends Component {
   constructor() {
     super();
     this.state = {
@@ -139,7 +139,7 @@ class GameContainer extends PureComponent {
     Cookies.set('board', data);
   }
 
-  // Function called by block to update global state.
+  // Function called by a block to update global state.
   update(id, val) {
     // Currently the top-most error is the only one being shown.
     const [row, col] = id.split('-'); // Retrieve indexes
@@ -153,7 +153,7 @@ class GameContainer extends PureComponent {
         message: '',
         err: false,
         flash: false,
-      });
+      }, console.log(this.state));
       // If the user makes a valid move, assume
       // they want to keep the board and save in cookies.
       Cookies.set('board', data);
@@ -176,7 +176,7 @@ class GameContainer extends PureComponent {
       diff,
     } = this.state;
 
-    const methods = {
+    const UIMethods = {
       newGame: this.newGame,
       solve: this.solve,
       reset: this.reset,
@@ -218,7 +218,7 @@ class GameContainer extends PureComponent {
             />
           ))}
         </div>
-        <UserInterface message={message} diff={diff} err={err} methods={methods} />
+        <UserInterface message={message} diff={diff} err={err} UIMethods={UIMethods} />
       </Fragment>
     );
   }
