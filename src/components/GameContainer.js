@@ -97,10 +97,12 @@ class GameContainer extends Component {
       this.setState({ message: `Conflict with ${this.state.err[0]} and ${this.state.err[1]}.` });
       return;
     }
+
     if (this.state.solved) {
       this.setState({ message: 'Already solved.' });
       return;
     }
+
     const data = this.state.data.map(v => v.slice(0));
     const solved = sudoku.solve(this.state.originalData.map(v => v.slice(0)));
 
@@ -111,9 +113,7 @@ class GameContainer extends Component {
           if (data[i][n] === 0) {
             // If we find a zero, the puzzle isn't fully solved yet but continue anyways.
             flag = false;
-            continue;
-          }
-          if (data[i][n] !== solved[i][n]) {
+          } else if (data[i][n] !== solved[i][n]) {
             this.setState({ message: `[${i}, ${n}] isn't correct`, err: [[i, n], [null, null]] });
             return;
           }
